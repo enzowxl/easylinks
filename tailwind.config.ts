@@ -1,5 +1,9 @@
 import type { Config } from 'tailwindcss'
 
+// @ts-ignore
+// eslint-disable-next-line import/no-named-default
+import { default as flattenColorPalette } from 'tailwindcss/lib/util/flattenColorPalette'
+
 const config: Config = {
   darkMode: ['class'],
   content: [
@@ -10,6 +14,42 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        purplePrimary: '#7C7AFF',
+        washedPrimary: '#B5B2FF',
+        dark: '#09090B',
+        'purple-primary-50': '#f2f2ff',
+        'purple-primary-100': '#d6d6ff',
+        'purple-primary-200': '#c3c2ff',
+        'purple-primary-300': '#a7a6ff',
+        'purple-primary-400': '#9695ff',
+        'purple-primary-500': '#7c7aff',
+        'purple-primary-600': '#716fe8',
+        'purple-primary-700': '#5857b5',
+        'purple-primary-800': '#44438c',
+        'purple-primary-900': '#34336b',
+        'washed-primary-50': '#f8f7ff',
+        'washed-primary-100': '#e8e7ff',
+        'washed-primary-200': '#dddcff',
+        'washed-primary-300': '#cdcbff',
+        'washed-primary-400': '#c4c1ff',
+        'washed-primary-500': '#b5b2ff',
+        'washed-primary-600': '#a5a2e8',
+        'washed-primary-700': '#817eb5',
+        'washed-primary-800': '#64628c',
+        'washed-primary-900': '#4c4b6b',
+        'neutrals-1': '#fdfdfd',
+        'neutrals-2': '#f5f5f5',
+        'neutrals-3': '#f0f0f0',
+        'neutrals-4': '#dadada',
+        'neutrals-5': '#c2c2c2',
+        'neutrals-6': '#909091',
+        'neutrals-7': '#5f5f60',
+        'neutrals-8': '#4b4b4d',
+        'neutrals-9': '#2e2e30',
+        'neutrals-10': '#272728',
+        'neutrals-11': '#1d1d1f',
+        'neutrals-12': '#131315',
+        'neutrals-13': '#09090b',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -58,6 +98,19 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'), addVariablesForColors],
 }
+
+// @ts-ignore
+function addVariablesForColors({ addBase, theme }: unknown) {
+  const allColors = flattenColorPalette(theme('colors'))
+  const newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val]),
+  )
+
+  addBase({
+    ':root': newVars,
+  })
+}
+
 export default config

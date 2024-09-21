@@ -2,5 +2,9 @@
   "extends": [
     "@rocketseat/eslint-config/next",
     "next/core-web-vitals"
-  ]
+  ],
+  "rules": {
+    "@typescript-eslint/ban-ts-comment":"off",
+    "eslint-disable-next-line": "off"
+  }
 }
