@@ -1,6 +1,11 @@
 'use client'
 
-import { ChartNoAxesColumn, Globe, Link, StickyNote, Users } from 'lucide-react'
+import {
+  ChartNoAxesColumn,
+  Globe,
+  Link,
+  // StickyNote, Users
+} from 'lucide-react'
 import { Logo } from '@/components/logo'
 import { SideBarButton } from './sidebar-button'
 import { UserMenu } from './user-menu'
@@ -23,16 +28,16 @@ const SideBar = () => {
       href: '/dashboard/domains',
       icon: Globe,
     },
-    {
-      title: 'Pages',
-      href: '/dashboard/pages',
-      icon: StickyNote,
-    },
-    {
-      title: 'Leads',
-      href: '/dashboard/leads',
-      icon: Users,
-    },
+    // {
+    //   title: 'Pages',
+    //   href: '/dashboard/pages',
+    //   icon: StickyNote,
+    // },
+    // {
+    //   title: 'Leads',
+    //   href: '/dashboard/leads',
+    //   icon: Users,
+    // },
   ]
 
   return (
