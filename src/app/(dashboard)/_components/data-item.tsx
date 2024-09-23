@@ -9,7 +9,7 @@ const PercentageItem = ({ total, value }: { total: number; value: number }) => {
   return (
     <div className="flex relative justify-between bg-dark rounded-lg w-full p-2.5">
       <h5 className="z-50">Opa</h5>
-      <h5 className="z-50">{percentage}</h5>
+      <h5 className="z-50">{percentage}%</h5>
       <div
         style={{
           width: `${percentage}%`,

@@ -34,7 +34,14 @@ const chartConfig = {
 const Chart = () => {
   return (
     <ChartContainer className="max-h-96 w-full" config={chartConfig}>
-      <AreaChart accessibilityLayer data={chartData} margin={{}}>
+      <AreaChart
+        accessibilityLayer
+        data={chartData}
+        margin={{
+          left: 20,
+          right: 20,
+        }}
+      >
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey="month"
@@ -45,12 +52,12 @@ const Chart = () => {
         />
         <ChartTooltip
           cursor={false}
-          content={<ChartTooltipContent indicator="line" />}
+          content={<ChartTooltipContent className="bg-dark" indicator="line" />}
         />
         <Area
           dataKey="desktop"
           type="natural"
-          fill="var(--color-desktop)"
+          fill="var(--purplePrimary)"
           fillOpacity={0.4}
           stroke="var(--purplePrimary)"
           stackId="a"
@@ -58,9 +65,9 @@ const Chart = () => {
         <Area
           dataKey="mobile"
           type="natural"
-          fill="var(--color-mobile)"
+          fill="var(--washedPrimary)"
           fillOpacity={0.4}
-          stroke="var(--color-mobile)"
+          stroke="var(--washedPrimary)"
           stackId="a"
         />
       </AreaChart>
