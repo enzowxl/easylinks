@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
 const THEMES = { light: '', dark: '.dark' } as const
 
 export type ChartConfig = {
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   [k in string]: {
     label?: React.ReactNode
     icon?: React.ComponentType
@@ -75,7 +75,7 @@ ChartContainer.displayName = 'Chart'
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ([_, config]) => config.theme || config.color,
   )
 

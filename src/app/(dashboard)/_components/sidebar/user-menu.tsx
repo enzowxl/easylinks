@@ -8,7 +8,7 @@ const UserMenu = ({ noText }: UserMenuType) => {
   return (
     <div className="flex items-center gap-2.5">
       <Image
-        className="w-6 h-6 rounded-full bg-neutrals-12 object-contain"
+        className="bg-dark w-6 h-6 rounded-full object-contain"
         src={
           'https://purepng.com/public/uploads/large/purepng.com-thinking-manthinking-manpersongentle-men-thinkingthinking-brain-1421526976458gpxqy.png'
         }

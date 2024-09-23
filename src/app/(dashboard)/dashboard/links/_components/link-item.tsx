@@ -1,4 +1,4 @@
-import { DotOptions } from './dot-options'
+import { DotOptions } from '@/components/dot-options'
 
 const LinkItem = () => {
   return (

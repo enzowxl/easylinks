@@ -1,22 +1,26 @@
 import clsx from 'clsx'
 import { LucideProps } from 'lucide-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 interface SideBarButtonType {
   title?: string
   icon?: React.ForwardRefExoticComponent<
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >
-  status?: 'active'
+  href: string
 }
 
-const SideBarButton = (
-  props: React.ButtonHTMLAttributes<HTMLButtonElement> & SideBarButtonType,
-) => {
+const SideBarButton = (props: SideBarButtonType) => {
+  const pathName = usePathname()
+
+  const active = pathName === props.href
+
   return (
-    <button
+    <Link
       className={clsx(
         'w-full flex items-center duration-500 border border-transparent gap-2.5 cursor-pointer px-2.5 py-1.5 rounded-lg',
-        props.status
+        active
           ? 'border border-purple-primary-500 bg-gradient-to-r from-purplePrimary to-purple-primary-800'
           : 'hover:border hover:border-neutrals-11 hover:from-neutrals-12 hover:to-neutrals-13 bg-gradient-to-r',
       )}
@@ -24,7 +28,7 @@ const SideBarButton = (
     >
       {props.icon && <props.icon className="w-5 h-5" />}
       {props.title}
-    </button>
+    </Link>
   )
 }
 
