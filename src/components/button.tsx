@@ -11,7 +11,7 @@ interface ButtonType {
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >
   href?: string
-  classNameContainer?: string
+  classnamecontainer?: string
 }
 
 const Button = (
@@ -19,7 +19,7 @@ const Button = (
 ) => {
   const className = clsx(
     'hover:scale-105 flex justify-center items-center gap-2.5 duration-500 border border-purple-primary-500 cursor-pointer px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-purplePrimary to-purple-primary-800',
-    props.classNameContainer,
+    props.classnamecontainer,
     props.disabled
       ? '!cursor-not-allowed !border !border-neutrals-11 !text-neutrals-7 !from-neutrals-12 !to-neutrals-13 hover:!scale-100'
       : '',

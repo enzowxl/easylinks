@@ -7,14 +7,14 @@ interface InputType {
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >
   label?: string
-  classNameContainer?: string
+  classnamecontainer?: string
 }
 
 const Input = (
   props: React.InputHTMLAttributes<HTMLInputElement> & InputType,
 ) => {
   return (
-    <div className={clsx('flex flex-col gap-2.5', props.classNameContainer)}>
+    <div className={clsx('flex flex-col gap-2.5', props.classnamecontainer)}>
       {props.label && <h5>{props.label}</h5>}
       <div
         className={clsx(
