@@ -21,7 +21,7 @@ const LinkPage = () => {
           </div>
 
           <Input
-            classNameContainer="max-sm:w-full"
+            classnamecontainer="max-sm:w-full"
             placeholder="Select date"
             icon={Calendar}
           />

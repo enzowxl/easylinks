@@ -17,12 +17,12 @@ const DomainsPage = () => {
 
           <div className="max-sm:flex-col flex gap-5 justify-between items-center">
             <Input
-              classNameContainer="max-sm:w-full"
+              classnamecontainer="max-sm:w-full"
               placeholder="Search domains"
               icon={Search}
             />
             <Button
-              classNameContainer="max-sm:w-full"
+              classnamecontainer="max-sm:w-full"
               title="Create domain"
               icon={Plus}
             />
