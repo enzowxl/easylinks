@@ -1,7 +1,7 @@
-import { formatPercentage } from '@/utils/format-percentage'
+import { calculatePercentage } from '@/utils/calculate-percentage'
 
 const PercentageItem = ({ total, value }: { total: number; value: number }) => {
-  const percentage = formatPercentage({
+  const percentage = calculatePercentage({
     total,
     value,
   })
