@@ -1,13 +1,5 @@
-import type { Metadata } from 'next'
 import { SideBar } from '@/app/(dashboard)/_components/sidebar/sidebar'
 import '@/app/globals.css'
-
-export const metadata: Metadata = {
-  title: {
-    template: '%s | easylinks',
-    default: 'easylinks',
-  },
-}
 
 const DashboardLayout = ({
   children,
