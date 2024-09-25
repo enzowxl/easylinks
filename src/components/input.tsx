@@ -1,6 +1,10 @@
 import clsx from 'clsx'
 import { LucideProps } from 'lucide-react'
 
+const variants = {
+  big: '!p-3',
+}
+
 interface InputType {
   title?: string
   icon?: React.ForwardRefExoticComponent<
@@ -8,6 +12,8 @@ interface InputType {
   >
   label?: string
   classnamecontainer?: string
+  classnameinputcontainer?: string
+  variant?: keyof typeof variants
 }
 
 const Input = (
@@ -20,6 +26,8 @@ const Input = (
         className={clsx(
           'hover:scale-105 flex items-center gap-2.5 duration-500 border border-neutrals-11 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-neutrals-12 to-neutrals-13',
           props.disabled ? 'hover:!scale-100 !cursor-not-allowed' : '',
+          props.classnameinputcontainer,
+          props.variant && variants[props.variant],
         )}
       >
         {props.icon && (

@@ -5,6 +5,10 @@ import { LucideProps } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
+const variants = {
+  big: '!p-3',
+}
+
 interface ButtonType {
   title?: string
   icon?: React.ForwardRefExoticComponent<
@@ -12,6 +16,7 @@ interface ButtonType {
   >
   href?: string
   classnamecontainer?: string
+  variant?: keyof typeof variants
 }
 
 const Button = (
@@ -23,6 +28,7 @@ const Button = (
     props.disabled
       ? '!cursor-not-allowed !border !border-neutrals-11 !text-neutrals-7 !from-neutrals-12 !to-neutrals-13 hover:!scale-100'
       : '',
+    props.variant && variants[props.variant],
   )
 
   const icon = props.icon && (

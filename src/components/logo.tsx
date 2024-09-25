@@ -12,11 +12,11 @@ const Logo = ({ noText, width, height, className }: LogoType) => {
   return (
     <div className={clsx('flex items-center gap-1.5', className)}>
       <Image
-        className={`w-[30px] h-[30px]`}
+        className={`w-[${width || '30'}px] h-[${height || 30}px]`}
         src={require('../../public/easylinks.png')}
         alt="logo"
-        width={100}
-        height={100}
+        width={width || 30}
+        height={width || 30}
       />
       {!noText && (
         <h5 className="font-bold">
