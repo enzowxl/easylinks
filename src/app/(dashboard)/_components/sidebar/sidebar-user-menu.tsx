@@ -1,10 +1,11 @@
+import { User } from '@prisma/client'
 import Image from 'next/image'
 
-interface UserMenuType {
-  noText?: boolean
+interface SideBarUserMenuType {
+  user: User | null
 }
 
-const UserMenu = ({ noText }: UserMenuType) => {
+const SideBarUserMenu = async ({ user }: SideBarUserMenuType) => {
   return (
     <div className="flex items-center gap-2.5">
       <Image
@@ -16,9 +17,9 @@ const UserMenu = ({ noText }: UserMenuType) => {
         width={100}
         height={100}
       />
-      {!noText && <h5>Enzo Almeida</h5>}
+      <h5>{user?.name}</h5>
     </div>
   )
 }
 
-export { UserMenu }
+export { SideBarUserMenu }
