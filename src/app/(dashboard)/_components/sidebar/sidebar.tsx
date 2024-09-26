@@ -19,11 +19,14 @@ const SideBar = async () => {
       <div className="flex flex-col gap-20 justify-between h-full w-[220px]">
         <div className="flex flex-col items-center gap-20 w-full">
           <Logo />
+
           <div className="w-full flex flex-col gap-5">
             <SideBarPages />
           </div>
         </div>
+
         <SideBarPlan />
+
         <SideBarUserMenu user={user} />
       </div>
     </aside>
