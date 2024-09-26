@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { SessionProvider } from 'next-auth/react'
+import { Toaster } from 'react-hot-toast'
 import clsx from 'clsx'
 import '@/app/globals.css'
 
@@ -22,7 +24,12 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang="en">
-      <body className={clsx('antialiased', inter.className)}>{children}</body>
+      <body className={clsx('antialiased', inter.className)}>
+        <SessionProvider>
+          {children}
+          <Toaster position="top-right" />
+        </SessionProvider>
+      </body>
     </html>
   )
 }

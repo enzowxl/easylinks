@@ -1,11 +1,12 @@
 import { Menu } from 'lucide-react'
 import { Button } from '@/components/button'
 import { Logo } from '@/components/logo'
+import { auth } from '@/auth'
 import Link from 'next/link'
 import React from 'react'
 
-const NavLandingPage = () => {
-  const user = null
+const NavLandingPage = async () => {
+  const session = await auth()
 
   return (
     <nav className="bg-dark/40 backdrop-blur-lg z-[100] fixed right-0 left-0 top-0 border-b border-neutrals-12 flex justify-between items-center px-5 py-3 w-full">
@@ -22,7 +23,7 @@ const NavLandingPage = () => {
         </li>
       </ul>
       <div className="max-sm:hidden flex items-center gap-5">
-        {user ? (
+        {session?.user ? (
           <Button href="/dashboard" title="Dashboard" />
         ) : (
           <React.Fragment>

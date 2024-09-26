@@ -1,5 +1,3 @@
-'use client'
-
 import { NavLandingPage } from './_components/nav-landing-page'
 import { BackgroundBeams } from '@/components/ui/background-beams'
 import { ContainerScroll } from '@/components/ui/container-scroll-animation'
