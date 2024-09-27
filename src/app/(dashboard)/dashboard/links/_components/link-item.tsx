@@ -1,8 +1,8 @@
 import { DotOptions } from '@/components/dot-options'
-import { LinkType } from './link-list'
+import { LinksType } from './link-list'
 import Link from 'next/link'
 
-const LinkItem = ({ link }: { link: LinkType }) => {
+const LinkItem = ({ link }: { link: LinksType }) => {
   const domainName = link.domain?.domainName ?? 'easylinks.com'
   const dashboardLinkUrl = '/dashboard/links/' + link.id
   const redirectEasyLinkUrl = `https://${domainName}/` + link.slug
@@ -21,7 +21,7 @@ const LinkItem = ({ link }: { link: LinkType }) => {
           href={redirectEasyLinkUrl}
           className="hover:underline text-neutrals-6 flex"
         >
-          {`https://${domainName}/`}
+          {`${domainName}/`}
           <p className="text-white">{link.slug}</p>
         </Link>
         <Link

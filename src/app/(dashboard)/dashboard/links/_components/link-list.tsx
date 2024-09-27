@@ -7,13 +7,13 @@ import { LinkItem } from './link-item'
 import { Prisma } from '@prisma/client'
 import { useState } from 'react'
 
-export type LinkType = Prisma.LinkGetPayload<{
+export type LinksType = Prisma.LinkGetPayload<{
   include: {
     domain: true
   }
 }>
 
-const LinkList = ({ links }: { links: LinkType[] }) => {
+const LinkList = ({ links }: { links: LinksType[] }) => {
   const [search, updateSearch] = useState<string>('')
 
   const filter =

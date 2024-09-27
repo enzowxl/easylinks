@@ -1,40 +1,90 @@
 'use client'
 
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
-
+import {
+  // Area, AreaChart,
+  CartesianGrid,
+  XAxis,
+  BarChart,
+  Bar,
+} from 'recharts'
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
+import dayjs from 'dayjs'
+import { LinkType } from '@/app/(dashboard)/dashboard/links/[linkId]/_components/link-data'
 
-export const description = 'A simple area chart'
-
-const chartData = [
-  { month: 'January', desktop: 186, mobile: 80 },
-  { month: 'February', desktop: 305, mobile: 200 },
-  { month: 'March', desktop: 237, mobile: 120 },
-  { month: 'April', desktop: 73, mobile: 190 },
-  { month: 'May', desktop: 209, mobile: 130 },
-  { month: 'June', desktop: 214, mobile: 140 },
+const colorPalette = [
+  '#7C7AFF',
+  '#B5B2FF',
+  '#44438C',
+  '#9695FF',
+  '#CDCBFF',
+  '#5857B5',
+  '#A5A2E8',
+  '#34336B',
+  '#E8E7FF',
 ]
 
-const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: 'hsl(var(--chart-1))',
-  },
-  mobile: {
-    label: 'Mobile',
-    color: 'hsl(var(--chart-2))',
-  },
-} satisfies ChartConfig
+const monthOrder = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+]
 
-const Chart = () => {
+const generateChartConfig = (keys: string[]) => {
+  return keys.reduce((config, key, index) => {
+    config[key] = {
+      label: key.charAt(0).toUpperCase() + key.slice(1),
+      color: colorPalette[index % colorPalette.length],
+    }
+    return config
+  }, {} as ChartConfig)
+}
+
+const transformChartData = (clicks: { createdAt: Date; device?: string }[]) => {
+  const monthCounts: Record<string, { [device: string]: number }> = {}
+
+  clicks.forEach((click) => {
+    const month = dayjs(click.createdAt).format('MMMM')
+    const device = click.device || 'Unknown'
+
+    if (!monthCounts[month]) {
+      monthCounts[month] = {}
+    }
+
+    monthCounts[month][device] = (monthCounts[month][device] || 0) + 1
+  })
+
+  return Object.keys(monthCounts)
+    .sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b))
+    .map((month) => ({
+      month,
+      ...monthCounts[month],
+    }))
+}
+
+const Chart = ({ link }: { link: LinkType }) => {
+  const chartData = transformChartData(link.clicks)
+  const devices = Array.from(
+    new Set(link.clicks.map((click) => click.device || 'Unknown')),
+  )
+  const chartConfig = generateChartConfig(devices)
+
   return (
     <ChartContainer className="max-h-96 w-full" config={chartConfig}>
-      <AreaChart
+      <BarChart
         accessibilityLayer
         data={chartData}
         margin={{
@@ -54,23 +104,18 @@ const Chart = () => {
           cursor={false}
           content={<ChartTooltipContent className="bg-dark" indicator="line" />}
         />
-        <Area
-          dataKey="desktop"
-          type="natural"
-          fill="var(--purplePrimary)"
-          fillOpacity={0.4}
-          stroke="var(--purplePrimary)"
-          stackId="a"
-        />
-        <Area
-          dataKey="mobile"
-          type="natural"
-          fill="var(--washedPrimary)"
-          fillOpacity={0.4}
-          stroke="var(--washedPrimary)"
-          stackId="a"
-        />
-      </AreaChart>
+        {devices.map((device) => (
+          <Bar
+            key={device}
+            dataKey={device}
+            type="natural"
+            fill={chartConfig[device]?.color}
+            fillOpacity={0.4}
+            stroke={chartConfig[device]?.color}
+            stackId="a"
+          />
+        ))}
+      </BarChart>
     </ChartContainer>
   )
 }

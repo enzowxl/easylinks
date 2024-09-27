@@ -1,44 +1,55 @@
-'use client'
-
-import { Input } from '@/components/input'
 import { NavAuth } from '@/app/(dashboard)/_components/nav-auth'
-import { Calendar } from 'lucide-react'
-import { Chart } from '@/components/chart'
-import { DataItem } from '@/app/(dashboard)/_components/data-item'
+import { prisma } from '@/lib/prisma'
+import { notFound } from 'next/navigation'
+import { LinkData } from './_components/link-data'
+import { Prisma } from '@prisma/client'
 
-const LinkPage = () => {
+export type LinkType = Prisma.LinkGetPayload<{
+  include: {
+    domain: true
+    clicks: true
+  }
+}>
+
+const getLink = async (linkId: string) => {
+  try {
+    const findLinkById = await prisma.link.findUnique({
+      where: { id: linkId },
+      include: { domain: true, clicks: true },
+    })
+
+    if (!findLinkById) return notFound()
+
+    return findLinkById
+  } catch (err) {
+    return notFound()
+  }
+}
+
+export async function generateMetadata({
+  params: { linkId },
+}: {
+  params: { linkId: string }
+}) {
+  const link = await getLink(linkId)
+
+  return {
+    title: link.title,
+  }
+}
+
+const LinkPage = async ({
+  params: { linkId },
+}: {
+  params: { linkId: string }
+}) => {
+  const link = await getLink(linkId)
+
   return (
     <div className="flex flex-col">
-      <NavAuth title="Links" />
+      <NavAuth title="Link" />
 
-      <div className="flex flex-col gap-8 py-5">
-        <div className="max-sm:flex-col flex justify-between gap-5 px-5">
-          <div>
-            <h3 className="font-bold text-2xl text-neutrals-6 flex">
-              easylinks.com/<p className="text-white">slug</p>
-            </h3>
-            <h5 className="text-neutrals-6">My link description</h5>
-          </div>
-
-          <Input
-            classnamecontainer="max-sm:w-full"
-            placeholder="Select date"
-            icon={Calendar}
-          />
-        </div>
-
-        <div className="flex flex-col gap-2.5">
-          <Chart />
-          <div className="max-lg:grid-cols-1 gap-5 grid grid-cols-2 px-5">
-            <div className="flex flex-col gap-5">
-              <DataItem />
-            </div>
-            <div className="flex flex-col gap-5">
-              <DataItem />
-            </div>
-          </div>
-        </div>
-      </div>
+      <LinkData link={link} />
     </div>
   )
 }

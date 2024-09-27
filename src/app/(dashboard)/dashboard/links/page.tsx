@@ -3,6 +3,12 @@ import { LinkList } from './_components/link-list'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/auth'
 
+export async function generateMetadata() {
+  return {
+    title: 'Links',
+  }
+}
+
 const LinksPage = async () => {
   const session = await auth()
 

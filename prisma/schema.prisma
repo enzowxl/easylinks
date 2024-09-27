@@ -69,12 +69,13 @@ model Domain {
 // }
 
 model Link {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  slug     String  @unique
-  title    String
-  url      String
-  ip       String
-  password String?
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  slug        String  @unique
+  title       String
+  description String
+  url         String
+  ip          String
+  password    String?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
