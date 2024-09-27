@@ -13,16 +13,19 @@ const SideBarPages = () => {
   const pages = [
     {
       title: 'Dashboard',
+      active: ['/dashboard'],
       href: '/dashboard',
       icon: ChartNoAxesColumn,
     },
     {
       title: 'Links',
+      active: ['/dashboard/links', '/dashboard/links/[id]'],
       href: '/dashboard/links',
       icon: Link,
     },
     {
       title: 'Domains',
+      active: ['/dashboard/domains'],
       href: '/dashboard/domains',
       icon: Globe,
     },

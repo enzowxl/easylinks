@@ -9,12 +9,19 @@ interface SideBarButtonType {
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
   >
   href: string
+  active: string[]
 }
 
 const SideBarButton = (props: SideBarButtonType) => {
   const pathName = usePathname()
 
-  const active = pathName === props.href
+  const active = props.active.some((route) => {
+    if (route.includes('[id]')) {
+      const baseRoute = route.split('[id]')[0]
+      return pathName.startsWith(baseRoute)
+    }
+    return pathName === route
+  })
 
   return (
     <Link
