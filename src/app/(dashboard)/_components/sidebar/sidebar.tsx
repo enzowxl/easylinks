@@ -12,8 +12,6 @@ const SideBar = async () => {
     where: { id: session?.user.sub },
   })
 
-  console.log(user)
-
   return (
     <aside className="max-lg:hidden flex h-screen p-5 bg-neutrals-12 overflow-y-auto">
       <div className="flex flex-col gap-20 justify-between h-full w-[220px]">

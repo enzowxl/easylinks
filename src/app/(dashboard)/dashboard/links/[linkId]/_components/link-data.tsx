@@ -1,8 +1,12 @@
+'use client'
+
 import { DataItem } from '@/app/(dashboard)/_components/data-item'
 import { Chart } from '@/components/chart'
 import { LinkType } from '../page'
+import { Select } from '@/components/select'
 import dayjs from 'dayjs'
-import { DatePickerWithRange } from '@/components/date-picker'
+import React from 'react'
+import { Click } from '@prisma/client'
 
 const countOccurrences = (clicks: { [key: string]: string | undefined }[]) => {
   const counts: Record<string, Record<string, number>> = {
@@ -59,8 +63,35 @@ const countClicksByDay = (clicks: { createdAt?: Date }[]) => {
   return dayCounts
 }
 
+const filterClicksByDate = (clicks: Click[], dateType: string) => {
+  const now = dayjs()
+  let type: dayjs.OpUnitType
+
+  switch (dateType) {
+    case 'this-week':
+      type = 'week'
+      break
+    case 'this-month':
+      type = 'month'
+      break
+    case 'this-year':
+      type = 'year'
+      break
+    default:
+      return clicks
+  }
+
+  return clicks.filter((click) =>
+    dayjs(click.createdAt).isAfter(now.startOf(type)),
+  )
+}
+
 const LinkData = ({ link }: { link: LinkType }) => {
   const domainName = link.domain?.domainName ?? 'easylinks.com'
+
+  const clickTypeCounts = countClickTypes(link.clicks)
+
+  const clicksByDay = countClicksByDay(link.clicks)
 
   const {
     browser: browserCounts,
@@ -76,9 +107,76 @@ const LinkData = ({ link }: { link: LinkType }) => {
     })),
   )
 
-  const clickTypeCounts = countClickTypes(link.clicks)
+  const dataItems = {
+    left: [
+      {
+        percentageItems: Object.entries(deviceCounts).map(([key, value]) => ({
+          label: key,
+          value,
+        })),
+        title: 'Most used devices',
+      },
+      {
+        percentageItems: Object.entries(redirectedByCounts).map(
+          ([key, value]) => ({
+            label: key,
+            value,
+          }),
+        ),
+        title: 'Most frequent redirects',
+      },
+      {
+        percentageItems: Object.entries(clicksByDay).map(([key, value]) => ({
+          label: key,
+          value,
+        })),
+        title: 'Most frequent days',
+      },
+    ],
+    right: [
+      {
+        percentageItems: Object.entries(browserCounts).map(([key, value]) => ({
+          label: key,
+          value,
+        })),
+        title: 'Most used browsers',
+      },
+      {
+        percentageItems: Object.entries(platformCounts).map(([key, value]) => ({
+          label: key,
+          value,
+        })),
+        title: 'Most used platforms',
+      },
+      {
+        percentageItems: [
+          { label: 'Unique', value: clickTypeCounts.unique },
+          { label: 'Double', value: clickTypeCounts.double },
+        ],
+        title: 'Click types',
+      },
+    ],
+  }
 
-  const clicksByDay = countClicksByDay(link.clicks)
+  const selectDateItems = [
+    {
+      label: 'This week',
+      value: 'this-week',
+    },
+    {
+      label: 'This month',
+      value: 'this-month',
+    },
+    {
+      label: 'This year',
+      value: 'this-year',
+    },
+  ]
+
+  const [dateType, updateDateType] =
+    React.useState<(typeof selectDateItems)[number]['value']>('this-year')
+
+  const filteredClicks = filterClicksByDate(link.clicks, dateType)
 
   return (
     <div className="flex flex-col gap-8 py-5">
@@ -91,73 +189,36 @@ const LinkData = ({ link }: { link: LinkType }) => {
           <h5 className="text-neutrals-6">{link.description}</h5>
         </div>
 
-        <DatePickerWithRange />
+        <Select
+          defaultValue={dateType}
+          onValueChange={(value) => updateDateType(value)}
+          placeholder="Select date"
+          items={selectDateItems}
+        />
       </div>
 
       <div className="flex flex-col gap-2.5">
-        <Chart link={link} />
+        <Chart link={{ ...link, clicks: filteredClicks }} dateType={dateType} />
         <div className="max-lg:grid-cols-1 gap-5 grid grid-cols-2 px-5">
           <div className="flex flex-col gap-5">
-            <DataItem
-              totalClicks={link.clicks.length}
-              percentageItems={Object.entries(deviceCounts).map(
-                ([key, value]) => ({
-                  label: key,
-                  value,
-                }),
-              )}
-              title="Most used devices"
-            />
-            <DataItem
-              totalClicks={link.clicks.length}
-              percentageItems={Object.entries(redirectedByCounts).map(
-                ([key, value]) => ({
-                  label: key,
-                  value,
-                }),
-              )}
-              title="Most frequent redirects"
-            />
-            <DataItem
-              totalClicks={link.clicks.length}
-              percentageItems={Object.entries(clicksByDay).map(
-                ([key, value]) => ({
-                  label: key,
-                  value,
-                }),
-              )}
-              title="Most frequent days"
-            />
+            {dataItems.left.map((dataItem, index) => (
+              <DataItem
+                key={index}
+                title={dataItem.title}
+                totalClicks={link.clicks.length}
+                percentageItems={dataItem.percentageItems}
+              />
+            ))}
           </div>
           <div className="flex flex-col gap-5">
-            <DataItem
-              totalClicks={link.clicks.length}
-              percentageItems={Object.entries(browserCounts).map(
-                ([key, value]) => ({
-                  label: key,
-                  value,
-                }),
-              )}
-              title="Most used browsers"
-            />
-            <DataItem
-              totalClicks={link.clicks.length}
-              percentageItems={Object.entries(platformCounts).map(
-                ([key, value]) => ({
-                  label: key,
-                  value,
-                }),
-              )}
-              title="Most used platforms"
-            />
-            <DataItem
-              totalClicks={link.clicks.length}
-              percentageItems={[
-                { label: 'Unique', value: clickTypeCounts.unique },
-                { label: 'Double', value: clickTypeCounts.double },
-              ]}
-              title="Click types"
-            />
+            {dataItems.right.map((dataItem, index) => (
+              <DataItem
+                key={index}
+                title={dataItem.title}
+                totalClicks={link.clicks.length}
+                percentageItems={dataItem.percentageItems}
+              />
+            ))}
           </div>
         </div>
       </div>

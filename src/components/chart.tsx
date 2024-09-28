@@ -1,12 +1,4 @@
-'use client'
-
-import {
-  // Area, AreaChart,
-  CartesianGrid,
-  XAxis,
-  BarChart,
-  Bar,
-} from 'recharts'
+import { CartesianGrid, XAxis, BarChart, Bar } from 'recharts'
 import {
   ChartConfig,
   ChartContainer,
@@ -14,7 +6,7 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart'
 import dayjs from 'dayjs'
-import { LinkType } from '@/app/(dashboard)/dashboard/links/[linkId]/_components/link-data'
+import { LinkType } from '@/app/(dashboard)/dashboard/links/[linkId]/page'
 
 const colorPalette = [
   '#7C7AFF',
@@ -43,6 +35,16 @@ const monthOrder = [
   'December',
 ]
 
+const weekOrder = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+]
+
 const generateChartConfig = (keys: string[]) => {
   return keys.reduce((config, key, index) => {
     config[key] = {
@@ -53,30 +55,60 @@ const generateChartConfig = (keys: string[]) => {
   }, {} as ChartConfig)
 }
 
-const transformChartData = (clicks: { createdAt: Date; device?: string }[]) => {
-  const monthCounts: Record<string, { [device: string]: number }> = {}
+const transformChartData = (
+  clicks: { createdAt: Date; device?: string }[],
+  dateType: string,
+) => {
+  const counts: Record<string, { [device: string]: number }> = {}
 
   clicks.forEach((click) => {
-    const month = dayjs(click.createdAt).format('MMMM')
-    const device = click.device || 'Unknown'
+    let key: string
 
-    if (!monthCounts[month]) {
-      monthCounts[month] = {}
+    switch (dateType) {
+      case 'this-week':
+        key = dayjs(click.createdAt).format('dddd')
+        break
+      case 'this-month':
+        key = dayjs(click.createdAt).format('DD')
+        break
+      case 'this-year':
+        key = dayjs(click.createdAt).format('MMMM')
+        break
+      default:
+        key = dayjs(click.createdAt).format('MMMM')
+        break
     }
 
-    monthCounts[month][device] = (monthCounts[month][device] || 0) + 1
+    const device = click.device || 'Unknown'
+    if (!counts[key]) {
+      counts[key] = {}
+    }
+    counts[key][device] = (counts[key][device] || 0) + 1
   })
 
-  return Object.keys(monthCounts)
-    .sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b))
-    .map((month) => ({
-      month,
-      ...monthCounts[month],
+  let order: string[] | undefined
+
+  switch (dateType) {
+    case 'this-year':
+      order = monthOrder
+      break
+    case 'this-week':
+      order = weekOrder
+      break
+  }
+
+  return Object.keys(counts)
+    .sort((a, b) =>
+      order ? order.indexOf(a) - order.indexOf(b) : Number(a) - Number(b),
+    )
+    .map((key) => ({
+      key,
+      ...counts[key],
     }))
 }
 
-const Chart = ({ link }: { link: LinkType }) => {
-  const chartData = transformChartData(link.clicks)
+const Chart = ({ link, dateType }: { link: LinkType; dateType: string }) => {
+  const chartData = transformChartData(link.clicks, dateType)
   const devices = Array.from(
     new Set(link.clicks.map((click) => click.device || 'Unknown')),
   )
@@ -94,7 +126,7 @@ const Chart = ({ link }: { link: LinkType }) => {
       >
         <CartesianGrid vertical={false} />
         <XAxis
-          dataKey="month"
+          dataKey={'key'}
           tickLine={false}
           axisLine={false}
           tickMargin={8}
