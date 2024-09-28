@@ -13,6 +13,7 @@ const countOccurrences = (clicks: { [key: string]: string | undefined }[]) => {
     browser: {},
     device: {},
     platform: {},
+    country: {},
     redirectedBy: {},
   }
 
@@ -97,12 +98,14 @@ const LinkData = ({ link }: { link: LinkType }) => {
     browser: browserCounts,
     device: deviceCounts,
     platform: platformCounts,
+    country: countryCounts,
     redirectedBy: redirectedByCounts,
   } = countOccurrences(
     link.clicks.map((click) => ({
       browser: click.browser,
       device: click.device,
       platform: click.platform,
+      country: click.country,
       redirectedBy: click.redirectedBy,
     })),
   )
@@ -131,6 +134,13 @@ const LinkData = ({ link }: { link: LinkType }) => {
           value,
         })),
         title: 'Most frequent days',
+      },
+      {
+        percentageItems: Object.entries(countryCounts).map(([key, value]) => ({
+          label: key,
+          value,
+        })),
+        title: 'Most frequent countries',
       },
     ],
     right: [
