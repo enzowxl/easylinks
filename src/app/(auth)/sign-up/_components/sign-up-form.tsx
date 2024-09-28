@@ -24,7 +24,7 @@ const SignUpForm = () => {
     try {
       await registerUser(formData)
 
-      toast.success('Successfully registered.')
+      toast.success('Successfully registered')
 
       return router.push('/sign-in')
     } catch (err) {

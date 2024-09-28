@@ -1,4 +1,5 @@
 import { object, string } from 'zod'
+import validateDomain from 'is-valid-domain'
 import { formData } from 'zod-form-data'
 
 const signInSchema = object({
@@ -24,4 +25,13 @@ const signUpSchema = formData({
   }),
 })
 
-export { signInSchema, signUpSchema }
+const createDomainSchema = formData({
+  domain: string({ message: 'Domain is required' }).refine(
+    (value) => validateDomain(value),
+    {
+      message: 'Invalid domain',
+    },
+  ),
+})
+
+export { signInSchema, signUpSchema, createDomainSchema }

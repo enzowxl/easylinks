@@ -1,10 +1,10 @@
 'use client'
 
-import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { NavAuth } from '@/app/(dashboard)/_components/nav-auth'
-import { Plus, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { DomainItem } from './_components/domain-item'
+import { ModalCreateDomain } from './_components/modal-create-domain'
 
 const DomainsPage = () => {
   return (
@@ -21,11 +21,7 @@ const DomainsPage = () => {
               placeholder="Search domains"
               icon={Search}
             />
-            <Button
-              classnamecontainer="max-sm:w-full"
-              title="Create domain"
-              icon={Plus}
-            />
+            <ModalCreateDomain />
           </div>
         </div>
 
