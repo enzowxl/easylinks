@@ -35,7 +35,7 @@ const Select = ({
       defaultValue={defaultValue}
       onValueChange={(e) => onValueChange && onValueChange(e)}
     >
-      <SelectTrigger className="!select-none">
+      <SelectTrigger className="outline-none">
         <div className="flex items-center gap-2.5 text-base">
           <Calendar className="w-5 h-5" />
           <SelectValue placeholder={placeholder} />
@@ -43,7 +43,12 @@ const Select = ({
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {label && <SelectLabel>{label}</SelectLabel>}
+          {label && (
+            <React.Fragment>
+              <SelectLabel>{label}</SelectLabel>
+              <SelectSeparator />
+            </React.Fragment>
+          )}
           {items &&
             items.map(({ value, label }, index) => (
               <React.Fragment key={value}>
