@@ -1,7 +1,8 @@
 import { DotOptions } from '@/components/dot-options'
-import clsx from 'clsx'
-import { Check, X } from 'lucide-react'
+import { Check, Delete, Edit, X } from 'lucide-react'
 import { DomainsType } from './domain-list'
+import clsx from 'clsx'
+import { DropdownMenu } from '@/components/dropdown-menu'
 
 const DomainItem = ({ domain }: { domain: DomainsType }) => {
   const Icon = domain.misconfigured ? X : Check
@@ -18,6 +19,23 @@ const DomainItem = ({ domain }: { domain: DomainsType }) => {
     {
       label: 'Value',
       value: '76.76.21.21',
+    },
+  ]
+
+  const dropDownMenuGroups = [
+    {
+      items: [
+        {
+          icon: Edit,
+          label: 'Edit',
+          onClick: () => {},
+        },
+        {
+          icon: Delete,
+          label: 'Delete',
+          onClick: () => {},
+        },
+      ],
     },
   ]
 
@@ -41,11 +59,13 @@ const DomainItem = ({ domain }: { domain: DomainsType }) => {
             <h5>{domain.misconfigured ? 'Invalid' : 'Valid'} Configuration</h5>
           </div>
         </div>
-        <DotOptions />
+        <DropdownMenu groups={dropDownMenuGroups}>
+          <DotOptions />
+        </DropdownMenu>
       </div>
       {domain.misconfigured && (
         <div className="flex flex-col gap-5 border rounded-b-lg border-neutrals-12 p-5">
-          <h5>A Record</h5>
+          <h5>DNS - A Record</h5>
           <div className="bg-neutrals-12 rounded-lg p-5">
             <div className="max-[320px]:flex-col flex gap-5">
               {configurations.map((configuration, index) => {

@@ -1,7 +1,6 @@
 import { NavAuth } from '@/app/(dashboard)/_components/nav-auth'
 import { DomainList } from './_components/domain-list'
-import { auth } from '@/auth'
-import { prisma } from '@/lib/prisma'
+import { getAllDomains } from '@/utils/db'
 
 export async function generateMetadata() {
   return {
@@ -10,21 +9,7 @@ export async function generateMetadata() {
 }
 
 const DomainsPage = async () => {
-  const session = await auth()
-
-  const domains = await prisma.domain.findMany({
-    where: { userId: session?.user.sub },
-  })
-
-  // const response = await fetch(
-  //   'https://api.vercel.com/v9/projects/easylinks/domains',
-  //   {
-  //     headers: {
-  //       Authorization: `Bearer ${process.env.VERCEL}`,
-  //     },
-  //     method: 'GET',
-  //   },
-  // )
+  const domains = await getAllDomains()
 
   return (
     <div className="flex flex-col">

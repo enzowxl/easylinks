@@ -1,7 +1,6 @@
 import { NavAuth } from '@/app/(dashboard)/_components/nav-auth'
 import { LinkList } from './_components/link-list'
-import { prisma } from '@/lib/prisma'
-import { auth } from '@/auth'
+import { getAllLinks } from '@/utils/db'
 
 export async function generateMetadata() {
   return {
@@ -10,14 +9,7 @@ export async function generateMetadata() {
 }
 
 const LinksPage = async () => {
-  const session = await auth()
-
-  const links = await prisma.link.findMany({
-    where: { userId: session?.user.sub },
-    include: {
-      domain: true,
-    },
-  })
+  const links = await getAllLinks()
 
   return (
     <div className="flex flex-col">
