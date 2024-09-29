@@ -21,7 +21,7 @@ export const ModalStoreProvider = ({ children }: ModalStoreProviderProps) => {
     storeRef.current = createModalStore()
   }
 
-  const modalContent = useStore(storeRef.current, (state) => state.states.data)
+  const modalContent = useStore(storeRef.current, (state) => state.state.data)
 
   return (
     <ModalStoreContext.Provider value={storeRef.current}>

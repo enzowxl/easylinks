@@ -7,7 +7,7 @@ import { ModalDeleteDomain } from './modal-delete-domain'
 import { useModalStore } from '@/provider/modal-provider'
 
 const DomainItem = ({ domain }: { domain: DomainsType }) => {
-  const { dispatchs } = useModalStore((state) => state)
+  const { dispatch } = useModalStore((state) => state)
 
   const Icon = domain.misconfigured ? X : Check
 
@@ -37,7 +37,7 @@ const DomainItem = ({ domain }: { domain: DomainsType }) => {
         {
           icon: Delete,
           label: 'Delete',
-          onClick: () => dispatchs.openModal(<ModalDeleteDomain />),
+          onClick: () => dispatch.openModal(<ModalDeleteDomain />),
         },
       ],
     },

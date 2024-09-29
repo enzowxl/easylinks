@@ -12,7 +12,7 @@ import { useModalStore } from '@/provider/modal-provider'
 export type DomainsType = Domain & { misconfigured?: boolean }
 
 const DomainList = ({ domains }: { domains: DomainsType[] }) => {
-  const { dispatchs } = useModalStore((state) => state)
+  const { dispatch } = useModalStore((state) => state)
 
   const [search, updateSearch] = useState<string>('')
 
@@ -40,7 +40,7 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
           />
           <Button
             onClick={() => {
-              dispatchs.openModal(<ModalCreateDomain />)
+              dispatch.openModal(<ModalCreateDomain />)
             }}
             classnamecontainer="max-sm:w-full"
             title="Create domain"

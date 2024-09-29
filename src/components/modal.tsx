@@ -11,14 +11,14 @@ const Modal = ({
   onClose?: () => void
   title: string
 }) => {
-  const { dispatchs, states } = useModalStore((state) => state)
+  const { dispatch, state } = useModalStore((state) => state)
 
   const closeModal = () => {
-    dispatchs.closeModal()
+    dispatch.closeModal()
     onClose && onClose()
   }
 
-  if (!states.isOpen) return null
+  if (!state.isOpen) return null
 
   return (
     <div

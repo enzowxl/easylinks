@@ -2,14 +2,14 @@ import { ReactNode } from 'react'
 import { createStore } from 'zustand/vanilla'
 
 export type ModalState = {
-  states: {
+  state: {
     isOpen: boolean
     data: ReactNode | null
   }
 }
 
 export type ModalDispatch = {
-  dispatchs: {
+  dispatch: {
     openModal: (data: ReactNode) => void
     closeModal: () => void
   }
@@ -18,7 +18,7 @@ export type ModalDispatch = {
 export type ModalStore = ModalState & ModalDispatch
 
 export const defaultInitState: ModalState = {
-  states: {
+  state: {
     isOpen: false,
     data: null,
   },
@@ -27,14 +27,14 @@ export const defaultInitState: ModalState = {
 export const createModalStore = (initState: ModalState = defaultInitState) => {
   return createStore<ModalStore>((set) => ({
     ...initState,
-    dispatchs: {
+    dispatch: {
       openModal: (data: ReactNode) =>
         set(() => ({
-          states: { isOpen: true, data },
+          state: { isOpen: true, data },
         })),
       closeModal: () =>
         set(() => ({
-          states: { isOpen: false, data: null },
+          state: { isOpen: false, data: null },
         })),
     },
   }))
