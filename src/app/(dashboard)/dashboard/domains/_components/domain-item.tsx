@@ -3,8 +3,12 @@ import { Check, Delete, Edit, X } from 'lucide-react'
 import { DomainsType } from './domain-list'
 import clsx from 'clsx'
 import { DropdownMenu } from '@/components/dropdown-menu'
+import { ModalDeleteDomain } from './modal-delete-domain'
+import { useModalStore } from '@/provider/modal-provider'
 
 const DomainItem = ({ domain }: { domain: DomainsType }) => {
+  const { dispatchs } = useModalStore((state) => state)
+
   const Icon = domain.misconfigured ? X : Check
 
   const configurations = [
@@ -33,7 +37,7 @@ const DomainItem = ({ domain }: { domain: DomainsType }) => {
         {
           icon: Delete,
           label: 'Delete',
-          onClick: () => {},
+          onClick: () => dispatchs.openModal(<ModalDeleteDomain />),
         },
       ],
     },

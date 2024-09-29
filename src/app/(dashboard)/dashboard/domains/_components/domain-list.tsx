@@ -1,15 +1,19 @@
 'use client'
 
 import { Input } from '@/components/input'
-import { Search } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import { DomainItem } from './domain-item'
 import { Domain } from '@prisma/client'
 import { useState } from 'react'
+import { Button } from '@/components/button'
 import { ModalCreateDomain } from './modal-create-domain'
+import { useModalStore } from '@/provider/modal-provider'
 
 export type DomainsType = Domain & { misconfigured?: boolean }
 
 const DomainList = ({ domains }: { domains: DomainsType[] }) => {
+  const { dispatchs } = useModalStore((state) => state)
+
   const [search, updateSearch] = useState<string>('')
 
   const filter =
@@ -27,7 +31,6 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
     <div className="flex flex-col gap-8 py-5">
       <div className="flex flex-col gap-5 px-5">
         <h3 className="font-bold text-2xl">{headerTitle}</h3>
-
         <div className="max-sm:flex-col flex gap-5 justify-between items-center">
           <Input
             classnamecontainer="max-sm:w-full"
@@ -35,7 +38,14 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
             icon={Search}
             onChange={(v) => updateSearch(v.target.value)}
           />
-          <ModalCreateDomain />
+          <Button
+            onClick={() => {
+              dispatchs.openModal(<ModalCreateDomain />)
+            }}
+            classnamecontainer="max-sm:w-full"
+            title="Create domain"
+            icon={Plus}
+          />
         </div>
       </div>
 
