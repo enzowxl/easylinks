@@ -186,6 +186,7 @@ const getAllDomains = async () => {
 
     for (const domain of json.domains) {
       for (const userDomain of findManyDomainsByUserId as DomainsType[]) {
+        userDomain.misconfigured = true
         if (domain.name === userDomain.domainName) {
           const configResponse = await fetch(
             `https://api.vercel.com/v6/domains/${domain.name}/config`,
