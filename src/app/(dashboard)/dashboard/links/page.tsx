@@ -1,4 +1,4 @@
-import { NavAuth } from '@/app/(dashboard)/_components/nav-auth'
+import { NavAuth } from '@/app/(dashboard)/_components/nav/nav-auth'
 import { LinkList } from './_components/link-list'
 import { getAllLinks } from '@/utils/db'
 

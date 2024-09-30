@@ -5,7 +5,7 @@ interface SideBarUserMenuType {
   user: User | null
 }
 
-const SideBarUserMenu = async ({ user }: SideBarUserMenuType) => {
+const SideBarUserMenu = ({ user }: SideBarUserMenuType) => {
   return (
     <div className="flex items-center gap-2.5">
       <Image

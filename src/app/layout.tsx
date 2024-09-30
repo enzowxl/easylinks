@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast'
 import { ModalStoreProvider } from '@/providers/modal-provider'
 import clsx from 'clsx'
 import '@/app/globals.css'
+import { SheetStoreProvider } from '@/providers/sheet-provider'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -27,10 +28,12 @@ const RootLayout = ({
     <html lang="en">
       <body className={clsx('antialiased', inter.className)}>
         <SessionProvider>
-          <ModalStoreProvider>
-            {children}
-            <Toaster position="top-right" />
-          </ModalStoreProvider>
+          <SheetStoreProvider>
+            <ModalStoreProvider>
+              {children}
+              <Toaster position="top-right" />
+            </ModalStoreProvider>
+          </SheetStoreProvider>
         </SessionProvider>
       </body>
     </html>

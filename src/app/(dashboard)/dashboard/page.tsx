@@ -1,4 +1,4 @@
-import { NavAuth } from '@/app/(dashboard)/_components/nav-auth'
+import { NavAuth } from '@/app/(dashboard)/_components/nav/nav-auth'
 
 const DashboardPage = () => {
   return (

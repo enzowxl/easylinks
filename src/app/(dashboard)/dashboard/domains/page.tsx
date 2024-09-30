@@ -1,4 +1,4 @@
-import { NavAuth } from '@/app/(dashboard)/_components/nav-auth'
+import { NavAuth } from '@/app/(dashboard)/_components/nav/nav-auth'
 import { DomainList } from './_components/domain-list'
 import { getAllDomains } from '@/utils/db'
 

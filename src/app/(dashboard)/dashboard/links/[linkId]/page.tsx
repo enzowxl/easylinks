@@ -1,4 +1,4 @@
-import { NavAuth } from '@/app/(dashboard)/_components/nav-auth'
+import { NavAuth } from '@/app/(dashboard)/_components/nav/nav-auth'
 import { LinkData } from './_components/link-data'
 import { Prisma } from '@prisma/client'
 import { getLink } from '@/utils/db'

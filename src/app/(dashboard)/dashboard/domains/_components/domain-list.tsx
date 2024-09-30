@@ -39,9 +39,7 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
             onChange={(v) => updateSearch(v.target.value)}
           />
           <Button
-            onClick={() => {
-              dispatch.openModal(<ModalCreateDomain />)
-            }}
+            onClick={() => dispatch.openModal(<ModalCreateDomain />)}
             classnamecontainer="max-sm:w-full"
             title="Create domain"
             icon={Plus}
