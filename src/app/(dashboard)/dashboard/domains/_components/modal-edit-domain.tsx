@@ -3,19 +3,9 @@ import { Input } from '@/components/input'
 import { Modal } from '@/components/modal'
 import { useModalStore } from '@/providers/modal-provider'
 import { editDomain } from '@/utils/db'
+import { toast } from '@/utils/toast'
 import { Domain } from '@prisma/client'
 import { Globe } from 'lucide-react'
-import toast from 'react-hot-toast'
-
-const toastConfig = {
-  duration: 5000,
-  className: 'border',
-  style: {
-    backgroundColor: '#09090B',
-    color: 'white',
-    borderColor: '#131315',
-  },
-}
 
 const ModalEditDomain = ({ domain }: { domain: Domain }) => {
   const { dispatch } = useModalStore((state) => state)
@@ -24,12 +14,20 @@ const ModalEditDomain = ({ domain }: { domain: Domain }) => {
     try {
       await editDomain(formData, domain.domainName)
 
-      toast.success('Successfully edited', toastConfig)
+      toast({
+        type: 'success',
+        message: 'Successfully edited',
+        style: 'dark',
+      })
 
       return dispatch.closeModal()
     } catch (err) {
       if (err instanceof Error) {
-        return toast.error(err.message, toastConfig)
+        return toast({
+          type: 'error',
+          message: err.message,
+          style: 'dark',
+        })
       }
     }
   }

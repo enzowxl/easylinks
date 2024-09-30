@@ -2,18 +2,8 @@ import { Button } from '@/components/button'
 import { Modal } from '@/components/modal'
 import { useModalStore } from '@/providers/modal-provider'
 import { deleteDomain } from '@/utils/db'
+import { toast } from '@/utils/toast'
 import { Domain } from '@prisma/client'
-import toast from 'react-hot-toast'
-
-const toastConfig = {
-  duration: 5000,
-  className: 'border',
-  style: {
-    backgroundColor: '#09090B',
-    color: 'white',
-    borderColor: '#131315',
-  },
-}
 
 const ModalDeleteDomain = ({ domain }: { domain: Domain }) => {
   const { dispatch } = useModalStore((state) => state)
@@ -22,12 +12,20 @@ const ModalDeleteDomain = ({ domain }: { domain: Domain }) => {
     try {
       await deleteDomain(domain.domainName)
 
-      toast.success('Successfully deleted', toastConfig)
+      toast({
+        type: 'success',
+        message: 'Successfully deleted',
+        style: 'dark',
+      })
 
       return dispatch.closeModal()
     } catch (err) {
       if (err instanceof Error) {
-        return toast.error(err.message, toastConfig)
+        return toast({
+          type: 'error',
+          message: err.message,
+          style: 'dark',
+        })
       }
     }
   }

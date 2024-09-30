@@ -3,18 +3,8 @@ import { Input } from '@/components/input'
 import { Modal } from '@/components/modal'
 import { useModalStore } from '@/providers/modal-provider'
 import { createDomain } from '@/utils/db'
+import { toast } from '@/utils/toast'
 import { Globe } from 'lucide-react'
-import toast from 'react-hot-toast'
-
-const toastConfig = {
-  duration: 5000,
-  className: 'border',
-  style: {
-    backgroundColor: '#09090B',
-    color: 'white',
-    borderColor: '#131315',
-  },
-}
 
 const ModalCreateDomain = () => {
   const { dispatch } = useModalStore((state) => state)
@@ -23,12 +13,20 @@ const ModalCreateDomain = () => {
     try {
       await createDomain(formData)
 
-      toast.success('Successfully created', toastConfig)
+      toast({
+        type: 'success',
+        message: 'Successfully created',
+        style: 'dark',
+      })
 
       return dispatch.closeModal()
     } catch (err) {
       if (err instanceof Error) {
-        return toast.error(err.message, toastConfig)
+        return toast({
+          type: 'error',
+          message: err.message,
+          style: 'dark',
+        })
       }
     }
   }

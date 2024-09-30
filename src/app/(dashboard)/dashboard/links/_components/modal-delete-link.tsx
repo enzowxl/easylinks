@@ -2,18 +2,8 @@ import { Button } from '@/components/button'
 import { Modal } from '@/components/modal'
 import { useModalStore } from '@/providers/modal-provider'
 import { deleteLink } from '@/utils/db'
+import { toast } from '@/utils/toast'
 import { Link } from '@prisma/client'
-import toast from 'react-hot-toast'
-
-const toastConfig = {
-  duration: 5000,
-  className: 'border',
-  style: {
-    backgroundColor: '#09090B',
-    color: 'white',
-    borderColor: '#131315',
-  },
-}
 
 const ModalDeleteLink = ({ link }: { link: Link }) => {
   const { dispatch } = useModalStore((state) => state)
@@ -22,12 +12,20 @@ const ModalDeleteLink = ({ link }: { link: Link }) => {
     try {
       await deleteLink(link.id)
 
-      toast.success('Successfully deleted', toastConfig)
+      toast({
+        type: 'success',
+        message: 'Successfully deleted',
+        style: 'dark',
+      })
 
       return dispatch.closeModal()
     } catch (err) {
       if (err instanceof Error) {
-        return toast.error(err.message, toastConfig)
+        return toast({
+          type: 'error',
+          message: err.message,
+          style: 'dark',
+        })
       }
     }
   }

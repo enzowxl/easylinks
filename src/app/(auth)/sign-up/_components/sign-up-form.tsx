@@ -3,19 +3,9 @@
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { registerUser } from '@/utils/db'
+import { toast } from '@/utils/toast'
 import { IdCard, Lock, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
-
-const toastConfig = {
-  duration: 5000,
-  className: 'border',
-  style: {
-    backgroundColor: '#09090B',
-    color: 'white',
-    borderColor: '#131315',
-  },
-}
 
 const SignUpForm = () => {
   const router = useRouter()
@@ -24,12 +14,20 @@ const SignUpForm = () => {
     try {
       await registerUser(formData)
 
-      toast.success('Successfully registered')
+      toast({
+        type: 'success',
+        message: 'Successfully registered',
+        style: 'dark',
+      })
 
       return router.push('/sign-in')
     } catch (err) {
       if (err instanceof Error) {
-        return toast.error(err.message, toastConfig)
+        return toast({
+          type: 'error',
+          message: err.message,
+          style: 'dark',
+        })
       }
     }
   }

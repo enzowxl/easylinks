@@ -5,17 +5,7 @@ import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { useRouter } from 'next/navigation'
 import { Lock, Mail } from 'lucide-react'
-import toast from 'react-hot-toast'
-
-const toastConfig = {
-  duration: 5000,
-  className: 'border',
-  style: {
-    backgroundColor: '#09090B',
-    color: 'white',
-    borderColor: '#131315',
-  },
-}
+import { toast } from '@/utils/toast'
 
 const SignInForm = () => {
   const router = useRouter()
@@ -28,10 +18,16 @@ const SignInForm = () => {
     })
 
     if (response?.code) {
-      return toast.error(response.code, toastConfig)
+      return toast({
+        type: 'error',
+        message: response.code,
+        style: 'dark',
+      })
     }
 
-    toast.remove()
+    toast({
+      type: 'remove',
+    })
 
     return router.push('/dashboard')
   }
