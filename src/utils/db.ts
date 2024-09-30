@@ -7,9 +7,12 @@ import { createDomainSchema, editDomainSchema, signUpSchema } from '@/lib/zod'
 import { ZodError } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { notFound } from 'next/navigation'
-import { DomainsType } from '@/app/(dashboard)/dashboard/domains/_components/domain-list'
 import { Domain } from '@prisma/client'
-import { createDomainInVercel, deleteDomainInVercel } from './vercel'
+import {
+  createDomainInVercel,
+  deleteDomainInVercel,
+  getAllDomainsInVercel,
+} from './vercel'
 
 const authorizeUser = async (email: string, password: string) => {
   const findUserByEmail = await prisma.user.findUnique({
@@ -145,41 +148,7 @@ const getAllDomains = async () => {
 
     const domains: Domain[] = [...findManyDomainsByUserId]
 
-    const response = await fetch(
-      `https://api.vercel.com/v9/projects/${process.env.VERCEL_PROJECT_ID}/domains`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.VERCEL_TOKEN}`,
-        },
-        method: 'GET',
-      },
-    )
-
-    const json = (await response.json()) as {
-      domains: { name: string }[]
-      error: unknown
-    }
-
-    for (const domain of json.domains) {
-      for (const userDomain of findManyDomainsByUserId as DomainsType[]) {
-        userDomain.misconfigured = true
-        if (domain.name === userDomain.domainName) {
-          const configResponse = await fetch(
-            `https://api.vercel.com/v6/domains/${domain.name}/config`,
-            {
-              headers: {
-                Authorization: `Bearer ${process.env.VERCEL_TOKEN}`,
-              },
-              method: 'GET',
-            },
-          )
-
-          const json = await configResponse.json()
-
-          userDomain.misconfigured = json.misconfigured
-        }
-      }
-    }
+    await getAllDomainsInVercel(findManyDomainsByUserId)
 
     return domains
   } catch (err) {
