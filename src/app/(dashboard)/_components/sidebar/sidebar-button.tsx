@@ -1,3 +1,4 @@
+import { useSheetStore } from '@/providers/sheet-provider'
 import clsx from 'clsx'
 import { LucideProps } from 'lucide-react'
 import Link from 'next/link'
@@ -13,6 +14,8 @@ interface SideBarButtonType {
 }
 
 const SideBarButton = (props: SideBarButtonType) => {
+  const { dispatch } = useSheetStore((state) => state)
+
   const pathName = usePathname()
 
   const active = props.active.some((route) => {
@@ -23,6 +26,10 @@ const SideBarButton = (props: SideBarButtonType) => {
     return pathName === route
   })
 
+  const onClick = () => {
+    dispatch.closeSheet()
+  }
+
   return (
     <Link
       className={clsx(
@@ -32,6 +39,7 @@ const SideBarButton = (props: SideBarButtonType) => {
           : 'hover:border hover:border-neutrals-11 hover:from-neutrals-12 hover:to-neutrals-13 bg-gradient-to-r',
       )}
       {...props}
+      onClick={onClick}
     >
       {props.icon && <props.icon className="w-5 h-5" />}
       {props.title}

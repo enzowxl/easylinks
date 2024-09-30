@@ -9,7 +9,7 @@ const NavSheetMenu = ({ user }: { user: User | null }) => {
     <Sheet>
       <div className="flex flex-col gap-20 justify-between h-full">
         <div className="flex flex-col items-center gap-20 w-full">
-          <div></div>
+          <div />
           <div className="w-full flex flex-col gap-5">
             <SideBarPages />
           </div>
