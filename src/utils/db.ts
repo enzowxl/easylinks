@@ -103,7 +103,7 @@ const getLink = async (linkId: string) => {
     if (!session?.user) return notFound()
 
     const findLinkById = await prisma.link.findUnique({
-      where: { id: linkId },
+      where: { id: linkId, userId: session.user.id },
       include: { domain: true, clicks: true },
     })
 
@@ -187,6 +187,35 @@ const deleteDomain = async (domainName: string) => {
   }
 }
 
+const deleteLink = async (linkId: string) => {
+  try {
+    const session = await auth()
+
+    if (!session?.user) throw new Error('Unauthorized.')
+
+    const findLinkById = await prisma.link.findUnique({
+      where: {
+        id: linkId,
+      },
+    })
+
+    if (!findLinkById) throw new Error('Link not found.')
+
+    await prisma.link.delete({
+      where: { id: linkId },
+    })
+
+    return revalidatePath('/dashboard/links', 'page')
+  } catch (err) {
+    if (err instanceof ZodError) {
+      throw new Error(err.errors[0].message)
+    }
+    if (err instanceof Error) {
+      throw new Error(err.message)
+    }
+  }
+}
+
 const editDomain = async (formData: FormData, domainName: string) => {
   try {
     const session = await auth()
@@ -233,5 +262,6 @@ export {
   getAllDomains,
   getAllLinks,
   deleteDomain,
+  deleteLink,
   editDomain,
 }
