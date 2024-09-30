@@ -158,13 +158,22 @@ const LinkData = ({ link }: { link: LinkType }) => {
         })),
         title: 'Most used platforms',
       },
-      {
-        percentageItems: [
-          { label: 'Unique', value: clickTypeCounts.unique },
-          { label: 'Double', value: clickTypeCounts.double },
-        ],
-        title: 'Click types',
-      },
+      ...(link.clicks.length > 0
+        ? [
+            {
+              percentageItems: [
+                { label: 'Unique', value: clickTypeCounts.unique },
+                { label: 'Double', value: clickTypeCounts.double },
+              ],
+              title: 'Click types',
+            },
+          ]
+        : [
+            {
+              percentageItems: [],
+              title: 'Click types',
+            },
+          ]),
     ],
   }
 

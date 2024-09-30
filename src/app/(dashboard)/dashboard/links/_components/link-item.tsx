@@ -3,8 +3,12 @@ import { LinksType } from './link-list'
 import { DropdownMenu } from '@/components/dropdown-menu'
 import Link from 'next/link'
 import { Delete, Edit, Share } from 'lucide-react'
+import { useModalStore } from '@/providers/modal-provider'
+import { ModalDeleteLink } from './modal-delete-link'
 
 const LinkItem = ({ link }: { link: LinksType }) => {
+  const { dispatch } = useModalStore((state) => state)
+
   const domainName = link.domain?.domainName ?? 'easylinks.com'
   const dashboardLinkUrl = '/dashboard/links/' + link.id
   const redirectEasyLinkUrl = `https://${domainName}/` + link.slug
@@ -21,7 +25,7 @@ const LinkItem = ({ link }: { link: LinksType }) => {
         {
           icon: Delete,
           label: 'Delete',
-          onClick: () => {},
+          onClick: () => dispatch.openModal(<ModalDeleteLink link={link} />),
         },
         {
           icon: Share,

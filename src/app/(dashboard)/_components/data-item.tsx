@@ -44,7 +44,7 @@ const DataItem = ({
     <div className="gap-5 flex flex-col bg-neutrals-12 w-full rounded-lg p-5">
       <h2 className="font-bold text-lg">{title}</h2>
       <div className="flex flex-col gap-2.5">
-        {percentageItems?.length > 0 &&
+        {percentageItems?.length > 0 ? (
           percentageItems.map(({ value, label }, index) => (
             <PercentageItem
               key={index}
@@ -52,7 +52,10 @@ const DataItem = ({
               value={value}
               label={label}
             />
-          ))}
+          ))
+        ) : (
+          <h4 className="text-neutrals-6">No existing data</h4>
+        )}
       </div>
     </div>
   )
