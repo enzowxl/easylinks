@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import { DropdownMenu } from '@/components/dropdown-menu'
 import { ModalDeleteDomain } from './modal-delete-domain'
 import { useModalStore } from '@/provider/modal-provider'
+import { ModalEditDomain } from './modal-edit-domain'
 
 const DomainItem = ({ domain }: { domain: DomainsType }) => {
   const { dispatch } = useModalStore((state) => state)
@@ -32,7 +33,8 @@ const DomainItem = ({ domain }: { domain: DomainsType }) => {
         {
           icon: Edit,
           label: 'Edit',
-          onClick: () => {},
+          onClick: () =>
+            dispatch.openModal(<ModalEditDomain domain={domain} />),
         },
         {
           icon: Delete,

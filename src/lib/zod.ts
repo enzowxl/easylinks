@@ -34,4 +34,13 @@ const createDomainSchema = formData({
   ),
 })
 
-export { signInSchema, signUpSchema, createDomainSchema }
+const editDomainSchema = formData({
+  newDomainName: string({ message: 'Domain is required' }).refine(
+    (value) => validateDomain(value),
+    {
+      message: 'Invalid domain',
+    },
+  ),
+})
+
+export { signInSchema, signUpSchema, createDomainSchema, editDomainSchema }

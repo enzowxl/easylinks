@@ -2,7 +2,8 @@ import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { Modal } from '@/components/modal'
 import { useModalStore } from '@/provider/modal-provider'
-import { createDomain } from '@/utils/db'
+import { editDomain } from '@/utils/db'
+import { Domain } from '@prisma/client'
 import { Globe } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -16,14 +17,14 @@ const toastConfig = {
   },
 }
 
-const ModalCreateDomain = () => {
+const ModalEditDomain = ({ domain }: { domain: Domain }) => {
   const { dispatch } = useModalStore((state) => state)
 
-  const createDomainAction = async (formData: FormData) => {
+  const editDomainAction = async (formData: FormData) => {
     try {
-      await createDomain(formData)
+      await editDomain(formData, domain.domainName)
 
-      toast.success('Successfully created', toastConfig)
+      toast.success('Successfully edited', toastConfig)
 
       return dispatch.closeModal()
     } catch (err) {
@@ -34,13 +35,13 @@ const ModalCreateDomain = () => {
   }
 
   return (
-    <Modal title="Create domain">
-      <form action={createDomainAction} className="flex flex-col gap-5 w-full">
-        <Input name="domainName" placeholder="example.com" icon={Globe} />
-        <Button type="submit" title="Create" />
+    <Modal title="Edit domain">
+      <form action={editDomainAction} className="flex flex-col gap-5 w-full">
+        <Input name="newDomainName" placeholder="example.com" icon={Globe} />
+        <Button type="submit" title="Edit" />
       </form>
     </Modal>
   )
 }
 
-export { ModalCreateDomain }
+export { ModalEditDomain }

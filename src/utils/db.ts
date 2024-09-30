@@ -3,12 +3,13 @@
 import { prisma } from '@/lib/prisma'
 import { encryptPassword, verifyPassword } from './password'
 import { auth, InvalidLoginError } from '@/auth'
-import { createDomainSchema, signUpSchema } from '@/lib/zod'
+import { createDomainSchema, editDomainSchema, signUpSchema } from '@/lib/zod'
 import { ZodError } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { notFound } from 'next/navigation'
 import { DomainsType } from '@/app/(dashboard)/dashboard/domains/_components/domain-list'
 import { Domain } from '@prisma/client'
+import { createDomainInVercel, deleteDomainInVercel } from './vercel'
 
 const authorizeUser = async (email: string, password: string) => {
   const findUserByEmail = await prisma.user.findUnique({
@@ -72,32 +73,7 @@ const createDomain = async (formData: FormData) => {
 
     if (findDomainByDomainName) throw new Error('Domain already exists.')
 
-    const response = await fetch(
-      `https://api.vercel.com/v10/projects/${process.env.VERCEL_PROJECT_ID}/domains`,
-      {
-        body: JSON.stringify({
-          name: domainName,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.VERCEL_TOKEN}`,
-        },
-        method: 'POST',
-      },
-    )
-
-    const json = await response.json()
-
-    switch (json?.error?.code) {
-      case 'duplicate-team-registration':
-        throw new Error('Domain already exists.')
-
-      case 'owned-on-other-team':
-        throw new Error('Domain already exists.')
-
-      case 'invalid_domain':
-        throw new Error('Invalid domain.')
-    }
+    await createDomainInVercel(domainName)
 
     await prisma.domain.create({
       data: {
@@ -225,24 +201,48 @@ const deleteDomain = async (domainName: string) => {
 
     if (!findDomainByDomainName) throw new Error('Domain not found.')
 
-    const response = await fetch(
-      `https://api.vercel.com/v9/projects/${process.env.VERCEL_PROJECT_ID}/domains/${domainName}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.VERCEL_TOKEN}`,
-        },
-        method: 'DELETE',
-      },
-    )
-
-    const json = await response.json()
-
-    if (json?.error) {
-      throw new Error('Bad request.')
-    }
+    await deleteDomainInVercel(domainName)
 
     await prisma.domain.delete({
       where: { domainName },
+    })
+
+    return revalidatePath('/dashboard/domains', 'page')
+  } catch (err) {
+    if (err instanceof ZodError) {
+      throw new Error(err.errors[0].message)
+    }
+    if (err instanceof Error) {
+      throw new Error(err.message)
+    }
+  }
+}
+
+const editDomain = async (formData: FormData, domainName: string) => {
+  try {
+    const session = await auth()
+
+    if (!session?.user) throw new Error('Unauthorized.')
+
+    const { newDomainName } = await editDomainSchema.parseAsync(formData)
+
+    const findDomainByNewDomainName = await prisma.domain.findUnique({
+      where: {
+        domainName: newDomainName,
+      },
+    })
+
+    if (findDomainByNewDomainName) throw new Error('Domain already exists.')
+
+    await deleteDomainInVercel(domainName)
+
+    await createDomainInVercel(newDomainName)
+
+    await prisma.domain.update({
+      where: { domainName },
+      data: {
+        domainName: newDomainName,
+      },
     })
 
     return revalidatePath('/dashboard/domains', 'page')
@@ -264,4 +264,5 @@ export {
   getAllDomains,
   getAllLinks,
   deleteDomain,
+  editDomain,
 }
