@@ -4,7 +4,7 @@ import { DomainsType } from './domain-list'
 import clsx from 'clsx'
 import { DropdownMenu } from '@/components/dropdown-menu'
 import { ModalDeleteDomain } from './modal-delete-domain'
-import { useModalStore } from '@/provider/modal-provider'
+import { useModalStore } from '@/providers/modal-provider'
 import { ModalEditDomain } from './modal-edit-domain'
 
 const DomainItem = ({ domain }: { domain: DomainsType }) => {

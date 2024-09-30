@@ -1,4 +1,4 @@
-import { useModalStore } from '@/provider/modal-provider'
+import { useModalStore } from '@/providers/modal-provider'
 import { X } from 'lucide-react'
 import React, { ReactNode } from 'react'
 

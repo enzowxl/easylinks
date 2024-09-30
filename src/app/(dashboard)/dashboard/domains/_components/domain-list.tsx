@@ -7,7 +7,7 @@ import { Domain } from '@prisma/client'
 import { useState } from 'react'
 import { Button } from '@/components/button'
 import { ModalCreateDomain } from './modal-create-domain'
-import { useModalStore } from '@/provider/modal-provider'
+import { useModalStore } from '@/providers/modal-provider'
 
 export type DomainsType = Domain & { misconfigured?: boolean }
 

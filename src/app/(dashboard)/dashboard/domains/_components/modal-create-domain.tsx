@@ -1,7 +1,7 @@
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { Modal } from '@/components/modal'
-import { useModalStore } from '@/provider/modal-provider'
+import { useModalStore } from '@/providers/modal-provider'
 import { createDomain } from '@/utils/db'
 import { Globe } from 'lucide-react'
 import toast from 'react-hot-toast'

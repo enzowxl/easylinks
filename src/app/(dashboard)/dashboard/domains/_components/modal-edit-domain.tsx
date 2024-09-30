@@ -1,7 +1,7 @@
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { Modal } from '@/components/modal'
-import { useModalStore } from '@/provider/modal-provider'
+import { useModalStore } from '@/providers/modal-provider'
 import { editDomain } from '@/utils/db'
 import { Domain } from '@prisma/client'
 import { Globe } from 'lucide-react'
