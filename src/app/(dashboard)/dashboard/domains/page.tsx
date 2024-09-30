@@ -12,7 +12,7 @@ const DomainsPage = async () => {
   const domains = await getAllDomains()
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       <NavAuth title="Domains" />
 
       <DomainList domains={domains} />

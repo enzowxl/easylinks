@@ -12,7 +12,7 @@ const LinksPage = async () => {
   const links = await getAllLinks()
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       <NavAuth title="Links" />
 
       <LinkList links={links} />

@@ -28,7 +28,7 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
   const headerTitle = `${length} ${length === 1 ? 'Domain' : 'Domains'}`
 
   return (
-    <div className="flex flex-col gap-8 py-5">
+    <div className="flex flex-col gap-8 py-5 flex-1">
       <div className="flex flex-col gap-5 px-5">
         <h3 className="font-bold text-2xl">{headerTitle}</h3>
         <div className="max-sm:flex-col flex gap-5 justify-between items-center">
@@ -47,14 +47,22 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2.5 px-5">
-        {search.length > 0
-          ? filter.map((domain, index) => {
-              return <DomainItem key={index} domain={domain} />
-            })
-          : domains.map((domain, index) => {
-              return <DomainItem key={index} domain={domain} />
-            })}
+      <div className="flex flex-col gap-2.5 px-5 flex-1">
+        {length <= 0 ? (
+          <div className="flex-1 flex items-center justify-center">
+            <h3 className="text-neutrals-6  font-bold text-center">
+              No domain found
+            </h3>
+          </div>
+        ) : search.length > 0 ? (
+          filter.map((domain, index) => {
+            return <DomainItem key={index} domain={domain} />
+          })
+        ) : (
+          domains.map((domain, index) => {
+            return <DomainItem key={index} domain={domain} />
+          })
+        )}
       </div>
     </div>
   )

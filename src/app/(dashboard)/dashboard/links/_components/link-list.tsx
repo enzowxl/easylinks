@@ -28,7 +28,7 @@ const LinkList = ({ links }: { links: LinksType[] }) => {
   const headerTitle = `${length} ${length === 1 ? 'Link' : 'Links'}`
 
   return (
-    <div className="flex flex-col gap-8 py-5">
+    <div className="flex flex-col gap-8 py-5 flex-1">
       <div className="flex flex-col gap-5 px-5">
         <h3 className="font-bold text-2xl">{headerTitle}</h3>
 
@@ -47,14 +47,22 @@ const LinkList = ({ links }: { links: LinksType[] }) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2.5 px-5">
-        {search.length > 0
-          ? filter.map((link, index) => {
-              return <LinkItem key={index} link={link} />
-            })
-          : links.map((link, index) => {
-              return <LinkItem key={index} link={link} />
-            })}
+      <div className="flex flex-col gap-2.5 px-5 flex-1">
+        {length <= 0 ? (
+          <div className="flex-1 flex items-center justify-center">
+            <h3 className="text-neutrals-6  font-bold text-center">
+              No link found
+            </h3>
+          </div>
+        ) : search.length > 0 ? (
+          filter.map((link, index) => {
+            return <LinkItem key={index} link={link} />
+          })
+        ) : (
+          links.map((link, index) => {
+            return <LinkItem key={index} link={link} />
+          })
+        )}
       </div>
     </div>
   )
