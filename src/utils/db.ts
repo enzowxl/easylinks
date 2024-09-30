@@ -64,10 +64,10 @@ const createDomain = async (formData: FormData) => {
 
     if (!session?.user) throw new Error('Unauthorized.')
 
-    const { domain } = await createDomainSchema.parseAsync(formData)
+    const { domainName } = await createDomainSchema.parseAsync(formData)
 
     const findDomainByDomainName = await prisma.domain.findUnique({
-      where: { domainName: domain },
+      where: { domainName },
     })
 
     if (findDomainByDomainName) throw new Error('Domain already exists.')
@@ -76,7 +76,7 @@ const createDomain = async (formData: FormData) => {
       `https://api.vercel.com/v10/projects/${process.env.VERCEL_PROJECT_ID}/domains`,
       {
         body: JSON.stringify({
-          name: domain,
+          name: domainName,
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ const createDomain = async (formData: FormData) => {
 
     await prisma.domain.create({
       data: {
-        domainName: domain,
+        domainName,
         userId: session?.user.sub,
       },
     })
@@ -211,6 +211,51 @@ const getAllDomains = async () => {
   }
 }
 
+const deleteDomain = async (domainName: string) => {
+  try {
+    const session = await auth()
+
+    if (!session?.user) throw new Error('Unauthorized.')
+
+    const findDomainByDomainName = await prisma.domain.findUnique({
+      where: {
+        domainName,
+      },
+    })
+
+    if (!findDomainByDomainName) throw new Error('Domain not found.')
+
+    const response = await fetch(
+      `https://api.vercel.com/v9/projects/${process.env.VERCEL_PROJECT_ID}/domains/${domainName}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.VERCEL_TOKEN}`,
+        },
+        method: 'DELETE',
+      },
+    )
+
+    const json = await response.json()
+
+    if (json?.error) {
+      throw new Error('Bad request.')
+    }
+
+    await prisma.domain.delete({
+      where: { domainName },
+    })
+
+    return revalidatePath('/dashboard/domains', 'page')
+  } catch (err) {
+    if (err instanceof ZodError) {
+      throw new Error(err.errors[0].message)
+    }
+    if (err instanceof Error) {
+      throw new Error(err.message)
+    }
+  }
+}
+
 export {
   authorizeUser,
   registerUser,
@@ -218,4 +263,5 @@ export {
   getLink,
   getAllDomains,
   getAllLinks,
+  deleteDomain,
 }

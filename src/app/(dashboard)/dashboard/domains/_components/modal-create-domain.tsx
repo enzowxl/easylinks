@@ -1,6 +1,7 @@
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { Modal } from '@/components/modal'
+import { useModalStore } from '@/provider/modal-provider'
 import { createDomain } from '@/utils/db'
 import { Globe } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -16,11 +17,15 @@ const toastConfig = {
 }
 
 const ModalCreateDomain = () => {
+  const { dispatch } = useModalStore((state) => state)
+
   const createDomainAction = async (formData: FormData) => {
     try {
       await createDomain(formData)
 
       toast.success('Successfully created', toastConfig)
+
+      return dispatch.closeModal()
     } catch (err) {
       if (err instanceof Error) {
         return toast.error(err.message, toastConfig)
@@ -34,7 +39,7 @@ const ModalCreateDomain = () => {
         action={(formData: FormData) => createDomainAction(formData)}
         className="flex flex-col gap-5 w-full"
       >
-        <Input name="domain" placeholder="example.com" icon={Globe} />
+        <Input name="domainName" placeholder="example.com" icon={Globe} />
         <Button type="submit" title="Create" />
       </form>
     </Modal>

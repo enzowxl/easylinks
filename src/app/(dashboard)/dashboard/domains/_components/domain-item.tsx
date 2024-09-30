@@ -37,7 +37,8 @@ const DomainItem = ({ domain }: { domain: DomainsType }) => {
         {
           icon: Delete,
           label: 'Delete',
-          onClick: () => dispatch.openModal(<ModalDeleteDomain />),
+          onClick: () =>
+            dispatch.openModal(<ModalDeleteDomain domain={domain} />),
         },
       ],
     },

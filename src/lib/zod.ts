@@ -26,7 +26,7 @@ const signUpSchema = formData({
 })
 
 const createDomainSchema = formData({
-  domain: string({ message: 'Domain is required' }).refine(
+  domainName: string({ message: 'Domain is required' }).refine(
     (value) => validateDomain(value),
     {
       message: 'Invalid domain',
