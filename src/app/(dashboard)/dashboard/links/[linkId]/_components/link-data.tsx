@@ -7,6 +7,8 @@ import { Select } from '@/components/select'
 import dayjs from 'dayjs'
 import React from 'react'
 import { Click } from '@prisma/client'
+import { BaseContainer } from '@/app/(dashboard)/_components/base/base-container'
+import { BaseContent } from '@/app/(dashboard)/_components/base/base-content'
 
 const countOccurrences = (clicks: { [key: string]: string | undefined }[]) => {
   const counts: Record<string, Record<string, number>> = {
@@ -198,7 +200,7 @@ const LinkData = ({ link }: { link: LinkType }) => {
   const filteredClicks = filterClicksByDate(link.clicks, dateType)
 
   return (
-    <div className="flex flex-col gap-8 py-5">
+    <BaseContainer>
       <div className="max-sm:flex-col sm:items-center flex justify-between gap-5 px-5">
         <div>
           <h3 className="font-bold text-2xl text-neutrals-6 flex">
@@ -216,9 +218,9 @@ const LinkData = ({ link }: { link: LinkType }) => {
         />
       </div>
 
-      <div className="flex flex-col gap-2.5">
+      <BaseContent className="!grid">
         <Chart link={{ ...link, clicks: filteredClicks }} dateType={dateType} />
-        <div className="max-lg:grid-cols-1 gap-5 grid grid-cols-2 px-5">
+        <div className="max-lg:grid-cols-1 gap-5 grid grid-cols-2">
           <div className="flex flex-col gap-5">
             {dataItems.left.map((dataItem, index) => (
               <DataItem
@@ -240,8 +242,8 @@ const LinkData = ({ link }: { link: LinkType }) => {
             ))}
           </div>
         </div>
-      </div>
-    </div>
+      </BaseContent>
+    </BaseContainer>
   )
 }
 

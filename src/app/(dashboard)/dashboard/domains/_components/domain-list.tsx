@@ -8,6 +8,8 @@ import { useState } from 'react'
 import { Button } from '@/components/button'
 import { ModalCreateDomain } from './modal-create-domain'
 import { useModalStore } from '@/providers/modal-provider'
+import { BaseContainer } from '@/app/(dashboard)/_components/base/base-container'
+import { BaseContent } from '@/app/(dashboard)/_components/base/base-content'
 
 export type DomainsType = Domain & { misconfigured?: boolean }
 
@@ -28,7 +30,7 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
   const headerTitle = `${length} ${length === 1 ? 'Domain' : 'Domains'}`
 
   return (
-    <div className="flex flex-col gap-8 py-5 flex-1">
+    <BaseContainer>
       <div className="flex flex-col gap-5 px-5">
         <h3 className="font-bold text-2xl">{headerTitle}</h3>
         <div className="max-sm:flex-col flex gap-5 justify-between items-center">
@@ -47,7 +49,7 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2.5 px-5 flex-1">
+      <BaseContent>
         {length <= 0 ? (
           <div className="flex-1 flex items-center justify-center">
             <h3 className="text-neutrals-6  font-bold text-center">
@@ -63,8 +65,8 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
             return <DomainItem key={index} domain={domain} />
           })
         )}
-      </div>
-    </div>
+      </BaseContent>
+    </BaseContainer>
   )
 }
 

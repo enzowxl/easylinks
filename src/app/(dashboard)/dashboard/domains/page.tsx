@@ -1,6 +1,6 @@
-import { NavAuth } from '@/app/(dashboard)/_components/nav/nav-auth'
 import { DomainList } from './_components/domain-list'
 import { getAllDomains } from '@/utils/db'
+import { Base } from '../../_components/base/base'
 
 export async function generateMetadata() {
   return {
@@ -12,11 +12,9 @@ const DomainsPage = async () => {
   const domains = await getAllDomains()
 
   return (
-    <div className="flex flex-col h-full">
-      <NavAuth title="Domains" />
-
+    <Base title="Domains">
       <DomainList domains={domains} />
-    </div>
+    </Base>
   )
 }
 

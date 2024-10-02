@@ -116,14 +116,7 @@ const Chart = ({ link, dateType }: { link: LinkType; dateType: string }) => {
 
   return (
     <ChartContainer className="max-h-96 w-full" config={chartConfig}>
-      <BarChart
-        accessibilityLayer
-        data={chartData}
-        margin={{
-          left: 20,
-          right: 20,
-        }}
-      >
+      <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis
           dataKey={'key'}

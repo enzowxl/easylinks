@@ -6,6 +6,8 @@ import { Plus, Search } from 'lucide-react'
 import { LinkItem } from './link-item'
 import { Prisma } from '@prisma/client'
 import { useState } from 'react'
+import { BaseContainer } from '@/app/(dashboard)/_components/base/base-container'
+import { BaseContent } from '@/app/(dashboard)/_components/base/base-content'
 
 export type LinksType = Prisma.LinkGetPayload<{
   include: {
@@ -28,7 +30,7 @@ const LinkList = ({ links }: { links: LinksType[] }) => {
   const headerTitle = `${length} ${length === 1 ? 'Link' : 'Links'}`
 
   return (
-    <div className="flex flex-col gap-8 py-5 flex-1">
+    <BaseContainer>
       <div className="flex flex-col gap-5 px-5">
         <h3 className="font-bold text-2xl">{headerTitle}</h3>
 
@@ -47,7 +49,7 @@ const LinkList = ({ links }: { links: LinksType[] }) => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2.5 px-5 flex-1">
+      <BaseContent>
         {length <= 0 ? (
           <div className="flex-1 flex items-center justify-center">
             <h3 className="text-neutrals-6  font-bold text-center">
@@ -63,8 +65,8 @@ const LinkList = ({ links }: { links: LinksType[] }) => {
             return <LinkItem key={index} link={link} />
           })
         )}
-      </div>
-    </div>
+      </BaseContent>
+    </BaseContainer>
   )
 }
 

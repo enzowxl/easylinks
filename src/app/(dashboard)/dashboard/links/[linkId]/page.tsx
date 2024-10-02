@@ -1,7 +1,7 @@
-import { NavAuth } from '@/app/(dashboard)/_components/nav/nav-auth'
 import { LinkData } from './_components/link-data'
 import { Prisma } from '@prisma/client'
 import { getLink } from '@/utils/db'
+import { Base } from '@/app/(dashboard)/_components/base/base'
 
 export type LinkType = Prisma.LinkGetPayload<{
   include: {
@@ -30,11 +30,9 @@ const LinkPage = async ({
   const link = await getLink(linkId)
 
   return (
-    <div className="flex flex-col">
-      <NavAuth title="Link" />
-
+    <Base title="Link">
       <LinkData link={link} />
-    </div>
+    </Base>
   )
 }
 

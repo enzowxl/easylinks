@@ -1,6 +1,6 @@
-import { NavAuth } from '@/app/(dashboard)/_components/nav/nav-auth'
 import { LinkList } from './_components/link-list'
 import { getAllLinks } from '@/utils/db'
+import { Base } from '../../_components/base/base'
 
 export async function generateMetadata() {
   return {
@@ -12,11 +12,9 @@ const LinksPage = async () => {
   const links = await getAllLinks()
 
   return (
-    <div className="flex flex-col h-full">
-      <NavAuth title="Links" />
-
+    <Base title="Links">
       <LinkList links={links} />
-    </div>
+    </Base>
   )
 }
 
