@@ -15,7 +15,7 @@ const DashboardLayout = async ({
   return (
     <div className="flex h-screen bg-neutrals-12">
       <SideBar />
-      <main className="lg:p-5 duration-500 flex-1 h-full overflow-hidden">
+      <main className="lg:p-5 !pl-0 duration-500 flex-1 h-full overflow-hidden">
         {children}
       </main>
     </div>
