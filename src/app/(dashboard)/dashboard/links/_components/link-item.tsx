@@ -70,7 +70,7 @@ const LinkItem = ({ link }: { link: LinksType }) => {
           >
             <Copy className="w-4 h-4 text-neutrals-5" />
           </button>
-          <button onClick={shareToQRCode}>
+          <button className="max-sm:hidden" onClick={shareToQRCode}>
             <QrCode className="w-4 h-4 text-neutrals-5" />
           </button>
           <h5 className="max-sm:hidden text-neutrals-6">
