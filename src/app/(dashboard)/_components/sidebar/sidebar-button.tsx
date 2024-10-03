@@ -33,10 +33,10 @@ const SideBarButton = (props: SideBarButtonType) => {
   return (
     <Link
       className={clsx(
-        'w-full flex items-center duration-500 border border-transparent gap-2.5 cursor-pointer px-2.5 py-1.5 rounded-lg',
+        'w-full flex items-center border duration-500 gap-2.5 cursor-pointer px-2.5 py-1.5 rounded-lg',
         active
-          ? 'border border-purple-primary-500 bg-gradient-to-r from-purplePrimary to-purple-primary-800'
-          : 'hover:border hover:border-neutrals-11 hover:from-neutrals-12 hover:to-neutrals-13 bg-gradient-to-r',
+          ? 'border-purple-primary-500 bg-gradient-to-r from-purplePrimary to-purple-primary-800'
+          : 'border-neutrals-12 hover:border hover:border-neutrals-11 hover:from-neutrals-12 hover:to-neutrals-13 bg-gradient-to-r',
       )}
       {...props}
       onClick={onClick}
