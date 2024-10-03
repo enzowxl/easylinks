@@ -31,7 +31,7 @@ const RootLayout = ({
           <SheetStoreProvider>
             <ModalStoreProvider>
               {children}
-              <Toaster position="top-right" />
+              <Toaster position="bottom-center" />
             </ModalStoreProvider>
           </SheetStoreProvider>
         </SessionProvider>

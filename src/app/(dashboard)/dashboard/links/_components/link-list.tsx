@@ -12,6 +12,7 @@ import { BaseContent } from '@/app/(dashboard)/_components/base/base-content'
 export type LinksType = Prisma.LinkGetPayload<{
   include: {
     domain: true
+    clicks: true
   }
 }>
 
@@ -42,6 +43,7 @@ const LinkList = ({ links }: { links: LinksType[] }) => {
             onChange={(v) => updateSearch(v.target.value)}
           />
           <Button
+            href="/dashboard/links/create"
             classnamecontainer="max-sm:w-full"
             title="Create link"
             icon={Plus}

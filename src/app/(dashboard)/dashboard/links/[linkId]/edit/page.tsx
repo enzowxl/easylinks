@@ -1,3 +1,4 @@
+import { Base } from '@/app/(dashboard)/_components/base/base'
 import { getLink } from '@/utils/db'
 
 export async function generateMetadata({
@@ -13,7 +14,7 @@ export async function generateMetadata({
 }
 
 const EditPage = () => {
-  return <></>
+  return <Base title="Edit"></Base>
 }
 
 export default EditPage

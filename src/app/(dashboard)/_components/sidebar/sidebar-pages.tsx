@@ -19,7 +19,12 @@ const SideBarPages = () => {
     },
     {
       title: 'Links',
-      active: ['/dashboard/links', '/dashboard/links/[id]'],
+      active: [
+        '/dashboard/links',
+        '/dashboard/links/create',
+        '/dashboard/links/[id]/edit',
+        '/dashboard/links/[id]',
+      ],
       href: '/dashboard/links',
       icon: Link,
     },

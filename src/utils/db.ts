@@ -125,6 +125,7 @@ const getAllLinks = async () => {
       where: { userId: session?.user.sub },
       include: {
         domain: true,
+        clicks: true,
       },
     })
 
