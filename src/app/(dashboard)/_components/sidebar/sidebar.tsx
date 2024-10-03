@@ -4,6 +4,7 @@ import { SideBarPlan } from './sidebar-plan'
 import { SideBarPages } from './sidebar-pages'
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
+import { notFound } from 'next/navigation'
 
 const SideBar = async () => {
   const session = await auth()
@@ -11,6 +12,8 @@ const SideBar = async () => {
   const user = await prisma.user.findUnique({
     where: { id: session?.user.sub },
   })
+
+  if (!session || !user) return notFound()
 
   return (
     <aside className="max-lg:hidden flex h-screen p-5 bg-neutrals-12 overflow-y-auto">

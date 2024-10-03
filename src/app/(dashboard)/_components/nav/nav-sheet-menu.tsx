@@ -4,7 +4,11 @@ import { SideBarPlan } from '../sidebar/sidebar-plan'
 import { SideBarUserMenu } from '../sidebar/sidebar-user-menu'
 import { User } from '@prisma/client'
 
-const NavSheetMenu = ({ user }: { user: User | null }) => {
+interface NavSheetMenuType {
+  user: User
+}
+
+const NavSheetMenu = ({ user }: NavSheetMenuType) => {
   return (
     <Sheet>
       <div className="flex flex-col gap-20 justify-between h-full">

@@ -5,7 +5,7 @@ import { NavSheetMenu } from './nav-sheet-menu'
 import { useSheetStore } from '@/providers/sheet-provider'
 import { User } from '@prisma/client'
 
-const NavButtonMenu = ({ user }: { user: User | null }) => {
+const NavButtonMenu = ({ user }: { user: User }) => {
   const { dispatch } = useSheetStore((state) => state)
 
   return (

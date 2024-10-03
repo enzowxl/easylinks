@@ -7,6 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import clsx from 'clsx'
 import { LucideProps } from 'lucide-react'
 import React, { ReactNode } from 'react'
 
@@ -14,6 +15,7 @@ const DropdownMenu = ({
   children,
   label,
   groups,
+  className,
 }: {
   children: ReactNode
   label?: string
@@ -26,11 +28,12 @@ const DropdownMenu = ({
       onClick: () => void
     }[]
   }[]
+  className?: string
 }) => {
   return (
     <DropDownMenuContainer>
       <DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className={clsx(className, 'w-56')}>
         {label && (
           <React.Fragment>
             <DropdownMenuLabel>{label}</DropdownMenuLabel>
