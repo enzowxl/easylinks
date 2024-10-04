@@ -135,7 +135,6 @@ const Chart = ({ link, dateType }: { link: LinkType; dateType: string }) => {
             dataKey={device}
             type="natural"
             fill={chartConfig[device]?.color}
-            fillOpacity={0.4}
             stroke={chartConfig[device]?.color}
             stackId="a"
           />
