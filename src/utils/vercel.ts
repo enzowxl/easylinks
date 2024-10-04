@@ -1,3 +1,5 @@
+'use server'
+
 import { DomainsType } from '@/app/(dashboard)/dashboard/domains/_components/domain-list'
 
 const createDomainInVercel = async (domainName: string) => {

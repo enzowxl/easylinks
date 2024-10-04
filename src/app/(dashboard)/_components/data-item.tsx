@@ -1,4 +1,4 @@
-import { calculatePercentage } from '@/utils/calculate-percentage'
+import { calculatePercentage } from '@/utils/percentage'
 
 const PercentageItem = ({
   total,

@@ -1,12 +1,13 @@
 import { DotOptions } from '@/components/dot-options'
 import { LinksType } from './link-list'
 import { DropdownMenu } from '@/components/dropdown-menu'
-import Link from 'next/link'
 import { Copy, Delete, Edit, QrCode, Share } from 'lucide-react'
 import { useModalStore } from '@/providers/modal-provider'
 import { ModalDeleteLink } from './modal-delete-link'
 import { toast } from '@/utils/toast'
 import { useRouter } from 'next/navigation'
+import { ModalShareLink } from './modal-share-link'
+import Link from 'next/link'
 
 const LinkItem = ({ link }: { link: LinksType }) => {
   const router = useRouter()
@@ -36,7 +37,7 @@ const LinkItem = ({ link }: { link: LinksType }) => {
         {
           icon: Share,
           label: 'Share',
-          onClick: () => {},
+          onClick: () => dispatch.openModal(<ModalShareLink link={link} />),
         },
       ],
     },
@@ -52,7 +53,9 @@ const LinkItem = ({ link }: { link: LinksType }) => {
     })
   }
 
-  const shareToQRCode = () => {}
+  const shareToQRCode = () => {
+    dispatch.openModal(<ModalShareLink link={link} />)
+  }
 
   return (
     <div className="max-sm:flex-col max-sm:text-center gap-5 flex justify-between items-center bg-neutrals-12 w-full rounded-lg p-5">

@@ -1,3 +1,5 @@
+'use server'
+
 import { hash, compare } from 'bcryptjs'
 
 const encryptPassword = async (password: string) => {
