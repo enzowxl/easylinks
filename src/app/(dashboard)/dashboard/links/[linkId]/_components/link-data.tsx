@@ -219,7 +219,11 @@ const LinkData = ({ link }: { link: LinkType }) => {
       </div>
 
       <BaseContent className="!grid">
-        <Chart link={{ ...link, clicks: filteredClicks }} dateType={dateType} />
+        <Chart
+          link={link}
+          linkFiltered={{ ...link, clicks: filteredClicks }}
+          dateType={dateType}
+        />
         <div className="max-lg:grid-cols-1 gap-5 grid grid-cols-2">
           <div className="flex flex-col gap-5">
             {dataItems.left.map((dataItem, index) => (

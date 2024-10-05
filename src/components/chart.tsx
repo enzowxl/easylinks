@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/chart'
 import dayjs from 'dayjs'
 import { LinkType } from '@/app/(dashboard)/dashboard/links/[linkId]/page'
+import React from 'react'
 
 const colorPalette = [
   '#7C7AFF',
@@ -107,40 +108,54 @@ const transformChartData = (
     }))
 }
 
-const Chart = ({ link, dateType }: { link: LinkType; dateType: string }) => {
-  const chartData = transformChartData(link.clicks, dateType)
+const Chart = ({
+  link,
+  dateType,
+  linkFiltered,
+}: {
+  link: LinkType
+  dateType: string
+  linkFiltered: LinkType
+}) => {
+  const chartData = transformChartData(linkFiltered.clicks, dateType)
   const devices = Array.from(
-    new Set(link.clicks.map((click) => click.device || 'Unknown')),
+    new Set(linkFiltered.clicks.map((click) => click.device || 'Unknown')),
   )
   const chartConfig = generateChartConfig(devices)
 
   return (
-    <ChartContainer className="max-h-96 w-full" config={chartConfig}>
-      <BarChart accessibilityLayer data={chartData}>
-        <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey={'key'}
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 3)}
-        />
-        <ChartTooltip
-          cursor={false}
-          content={<ChartTooltipContent className="bg-dark" indicator="line" />}
-        />
-        {devices.map((device) => (
-          <Bar
-            key={device}
-            dataKey={device}
-            type="natural"
-            fill={chartConfig[device]?.color}
-            stroke={chartConfig[device]?.color}
-            stackId="a"
+    <React.Fragment>
+      <h3 className="text-2xl font-bold">{link.clicks.length} clicks</h3>
+
+      <ChartContainer className="max-h-96 w-full" config={chartConfig}>
+        <BarChart accessibilityLayer data={chartData}>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey={'key'}
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={(value) => value.slice(0, 3)}
           />
-        ))}
-      </BarChart>
-    </ChartContainer>
+          <ChartTooltip
+            cursor={false}
+            content={
+              <ChartTooltipContent className="bg-dark" indicator="line" />
+            }
+          />
+          {devices.map((device) => (
+            <Bar
+              key={device}
+              dataKey={device}
+              type="natural"
+              fill={chartConfig[device]?.color}
+              stroke={chartConfig[device]?.color}
+              stackId="a"
+            />
+          ))}
+        </BarChart>
+      </ChartContainer>
+    </React.Fragment>
   )
 }
 
