@@ -213,7 +213,6 @@ const LinkData = ({ link }: { link: LinkType }) => {
 
         <Select
           icon={Calendar}
-          defaultValue={dateType}
           onValueChange={(value) => updateDateType(value)}
           placeholder="Select date"
           items={selectDateItems}
