@@ -12,15 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Calendar } from 'lucide-react'
+import { LucideProps } from 'lucide-react'
+import clsx from 'clsx'
 
-const Select = ({
-  label,
-  items,
-  placeholder,
-  onValueChange,
-  defaultValue,
-}: {
+export interface SelectType {
+  icon?: React.ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
+  >
   label?: string
   items: {
     value: string
@@ -29,15 +27,35 @@ const Select = ({
   placeholder: string
   onValueChange?: (value: string) => void
   defaultValue?: string
-}) => {
+  disabled?: boolean
+  className?: string
+}
+
+const Select = ({
+  icon,
+  label,
+  items,
+  placeholder,
+  onValueChange,
+  defaultValue,
+  disabled,
+  className,
+}: SelectType) => {
+  const Icon = icon
   return (
     <SelectContainer
       defaultValue={defaultValue}
       onValueChange={(e) => onValueChange && onValueChange(e)}
     >
-      <SelectTrigger className="outline-none">
+      <SelectTrigger
+        className={clsx(
+          'outline-none text-neutrals-6',
+          disabled ? '!text-neutrals-7' : '',
+          className,
+        )}
+      >
         <div className="flex items-center gap-2.5 text-base">
-          <Calendar className="w-5 h-5" />
+          {Icon && <Icon className={clsx('w-5 h-5')} />}
           <SelectValue placeholder={placeholder} />
         </div>
       </SelectTrigger>

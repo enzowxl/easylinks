@@ -5,7 +5,7 @@ const variants = {
   big: '!p-3',
 }
 
-interface InputType {
+export interface InputType {
   title?: string
   icon?: React.ForwardRefExoticComponent<
     Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
