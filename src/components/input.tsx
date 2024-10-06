@@ -21,7 +21,14 @@ const Input = (
 ) => {
   return (
     <div className={clsx('flex flex-col gap-2.5', props.classnamecontainer)}>
-      {props.label && <h5>{props.label}</h5>}
+      {props.label && (
+        <div className="flex gap-2 items-center">
+          <h5>{props.label}</h5>
+          {!props.required && (
+            <p className="text-sm text-neutrals-6">(Optional)</p>
+          )}
+        </div>
+      )}
       <div
         className={clsx(
           'hover:scale-105 flex items-center gap-2.5 duration-500 border border-neutrals-11 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-neutrals-12 to-neutrals-13',

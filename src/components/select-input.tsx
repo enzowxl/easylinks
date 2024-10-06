@@ -8,6 +8,7 @@ interface SelectInputType {
   label?: string
   className?: string
   classnamecontainer?: string
+  required?: boolean
 }
 
 const SelectInput = ({
@@ -16,13 +17,19 @@ const SelectInput = ({
   label,
   classnamecontainer,
   className,
+  required,
 }: SelectInputType) => {
   return (
     <div className={clsx(classnamecontainer, 'flex flex-col gap-2.5 w-full')}>
-      <h5>{label}</h5>
+      {label && (
+        <div className="flex gap-2 items-center">
+          <h5>{label}</h5>
+          {!required && <p className="text-sm text-neutrals-6">(Optional)</p>}
+        </div>
+      )}
       <div className={clsx(className, 'flex w-full')}>
         <Select {...select} />
-        <Input {...input} label={undefined} />
+        <Input {...input} label={undefined} required={required} />
       </div>
     </div>
   )
