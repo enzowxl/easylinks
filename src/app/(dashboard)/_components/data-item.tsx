@@ -15,7 +15,7 @@ const PercentageItem = ({
   })
 
   return (
-    <div className="flex relative justify-between bg-dark rounded-lg w-full p-2.5">
+    <div className="flex relative justify-between bg-dark rounded-lg w-full gap-5 p-2.5">
       <h5 className="z-[1] text-ellipsis overflow-hidden">{label}</h5>
       <h5 className="z-[1]">{percentage}%</h5>
       <div
