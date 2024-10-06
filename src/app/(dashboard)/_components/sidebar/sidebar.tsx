@@ -2,18 +2,10 @@ import { Logo } from '@/components/logo'
 import { SideBarUserMenu } from './sidebar-user-menu'
 import { SideBarPlan } from './sidebar-plan'
 import { SideBarPages } from './sidebar-pages'
-import { auth } from '@/auth'
-import { prisma } from '@/lib/prisma'
-import { notFound } from 'next/navigation'
+import { getMe } from '@/utils/db'
 
 const SideBar = async () => {
-  const session = await auth()
-
-  const user = await prisma.user.findUnique({
-    where: { id: session?.user.sub },
-  })
-
-  if (!session || !user) return notFound()
+  const user = await getMe()
 
   return (
     <aside className="max-lg:hidden flex h-screen p-5 bg-neutrals-12 overflow-y-auto">

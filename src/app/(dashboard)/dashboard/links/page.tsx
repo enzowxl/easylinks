@@ -11,8 +11,15 @@ export async function generateMetadata() {
 const LinksPage = async () => {
   const links = await getAllLinks()
 
+  const title = [
+    {
+      label: 'Links',
+      href: '/dashboard/links',
+    },
+  ]
+
   return (
-    <Base title="Links">
+    <Base title={title}>
       <LinkList links={links} />
     </Base>
   )

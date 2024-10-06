@@ -59,11 +59,11 @@ const LinkItem = ({ link }: { link: LinksType }) => {
 
   return (
     <div className="max-sm:flex-col max-sm:text-center gap-5 flex justify-between items-center bg-neutrals-12 w-full rounded-lg p-5">
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1.5 w-full overflow-hidden text-ellipsis">
         <div className="max-sm:justify-center flex items-center gap-3">
           <Link
             href={dashboardLinkUrl}
-            className="hover:underline font-bold text-lg "
+            className="hover:underline font-bold text-lg overflow-hidden text-ellipsis"
           >
             {link.title}
           </Link>
@@ -82,14 +82,16 @@ const LinkItem = ({ link }: { link: LinksType }) => {
         </div>
         <Link
           href={redirectUrl}
-          className="hover:underline flex text-neutrals-6"
+          className="max-sm:justify-center overflow-hidden text-ellipsis hover:underline flex text-neutrals-6"
         >
           {`${domainName}/`}
-          <p className="text-white inline-block">{link.slug}</p>
+          <p className="overflow-hidden text-ellipsis text-white inline-block">
+            {link.slug}
+          </p>
         </Link>
         <Link
           href={externalWebsiteUrl}
-          className="hover:underline text-neutrals-6"
+          className="hover:underline text-neutrals-6 overflow-hidden text-ellipsis"
         >
           {externalWebsiteUrl}
         </Link>

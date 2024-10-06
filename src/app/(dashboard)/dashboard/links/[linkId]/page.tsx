@@ -29,8 +29,19 @@ const LinkPage = async ({
 }) => {
   const link = await getLink(linkId)
 
+  const title = [
+    {
+      label: 'Links',
+      href: '/dashboard/links',
+    },
+    {
+      label: link.id,
+      href: `/dashboard/links/${link.id}`,
+    },
+  ]
+
   return (
-    <Base title="Link">
+    <Base title={title}>
       <LinkData link={link} />
     </Base>
   )

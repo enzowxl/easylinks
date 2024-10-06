@@ -9,6 +9,7 @@ import React from 'react'
 import { Click } from '@prisma/client'
 import { BaseContainer } from '@/app/(dashboard)/_components/base/base-container'
 import { BaseContent } from '@/app/(dashboard)/_components/base/base-content'
+import { Calendar } from 'lucide-react'
 
 const countOccurrences = (clicks: { [key: string]: string | undefined }[]) => {
   const counts: Record<string, Record<string, number>> = {
@@ -211,6 +212,7 @@ const LinkData = ({ link }: { link: LinkType }) => {
         </div>
 
         <Select
+          icon={Calendar}
           defaultValue={dateType}
           onValueChange={(value) => updateDateType(value)}
           placeholder="Select date"

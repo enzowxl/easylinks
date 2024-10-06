@@ -3,7 +3,10 @@ import { NavAuth } from '../nav/nav-auth'
 import { ReactNode } from 'react'
 
 interface BaseType {
-  title: string
+  title: {
+    label: string
+    href: string
+  }[]
   children: ReactNode
   className?: string
 }

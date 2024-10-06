@@ -96,6 +96,22 @@ const createDomain = async (formData: FormData) => {
   }
 }
 
+const getMe = async () => {
+  try {
+    const session = await auth()
+
+    const user = await prisma.user.findUnique({
+      where: { id: session?.user.sub },
+    })
+
+    if (!session || !user) return notFound()
+
+    return user
+  } catch (err) {
+    return notFound()
+  }
+}
+
 const getLink = async (linkId: string) => {
   try {
     const session = await auth()
@@ -259,6 +275,7 @@ export {
   authorizeUser,
   registerUser,
   createDomain,
+  getMe,
   getLink,
   getAllDomains,
   getAllLinks,

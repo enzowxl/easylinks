@@ -11,8 +11,15 @@ export async function generateMetadata() {
 const DomainsPage = async () => {
   const domains = await getAllDomains()
 
+  const title = [
+    {
+      label: 'Domains',
+      href: '/dashboard/domains',
+    },
+  ]
+
   return (
-    <Base title="Domains">
+    <Base title={title}>
       <DomainList domains={domains} />
     </Base>
   )
