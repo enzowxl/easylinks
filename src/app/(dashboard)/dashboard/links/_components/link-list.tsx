@@ -22,7 +22,7 @@ const LinkList = ({ links }: { links: LinksType[] }) => {
   const filter =
     search.length > 0
       ? links.filter((link) =>
-          link.title.toLowerCase().includes(search.toLowerCase()),
+          link.slug.toLowerCase().includes(search.toLowerCase()),
         )
       : []
 

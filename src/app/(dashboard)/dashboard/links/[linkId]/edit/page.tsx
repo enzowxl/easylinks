@@ -13,8 +13,21 @@ export async function generateMetadata({
   }
 }
 
-const EditPage = () => {
-  return <Base title="Edit"></Base>
+const EditPage = async ({
+  params: { linkId },
+}: {
+  params: { linkId: string }
+}) => {
+  const link = await getLink(linkId)
+
+  const title = [
+    {
+      label: `Links / ${link.id} / Edit`,
+      href: '/dashboard',
+    },
+  ]
+
+  return <Base title={title}>opa</Base>
 }
 
 export default EditPage

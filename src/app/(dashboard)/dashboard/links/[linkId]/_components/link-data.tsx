@@ -4,91 +4,16 @@ import { DataItem } from '@/app/(dashboard)/_components/data-item'
 import { Chart } from '@/components/chart'
 import { LinkType } from '../page'
 import { Select } from '@/components/select'
-import dayjs from 'dayjs'
-import React from 'react'
-import { Click } from '@prisma/client'
 import { BaseContainer } from '@/app/(dashboard)/_components/base/base-container'
 import { BaseContent } from '@/app/(dashboard)/_components/base/base-content'
 import { Calendar } from 'lucide-react'
-
-const countOccurrences = (clicks: { [key: string]: string | undefined }[]) => {
-  const counts: Record<string, Record<string, number>> = {
-    browser: {},
-    device: {},
-    platform: {},
-    country: {},
-    redirectedBy: {},
-  }
-
-  clicks.forEach((click) => {
-    for (const key in counts) {
-      const value = click[key] || 'Unknown'
-      counts[key][value] = (counts[key][value] || 0) + 1
-    }
-  })
-
-  return counts
-}
-
-const countClickTypes = (clicks: { ip?: string }[]) => {
-  const clickTypeCounts = {
-    unique: 0,
-    double: 0,
-  }
-
-  const ipOccurrences: Record<string, number> = {}
-
-  clicks.forEach((click) => {
-    const ip = click.ip || 'Unknown'
-
-    if (!ipOccurrences[ip]) {
-      ipOccurrences[ip] = 1
-      clickTypeCounts.unique += 1
-    } else {
-      ipOccurrences[ip] += 1
-      clickTypeCounts.double += 1
-    }
-  })
-
-  return clickTypeCounts
-}
-
-const countClicksByDay = (clicks: { createdAt?: Date }[]) => {
-  const dayCounts: Record<string, number> = {}
-
-  clicks.forEach((click) => {
-    const date = click.createdAt
-      ? dayjs(click.createdAt).format('dddd')
-      : 'Unknown'
-
-    dayCounts[date] = (dayCounts[date] || 0) + 1
-  })
-
-  return dayCounts
-}
-
-const filterClicksByDate = (clicks: Click[], dateType: string) => {
-  const now = dayjs()
-  let type: dayjs.OpUnitType
-
-  switch (dateType) {
-    case 'this-week':
-      type = 'week'
-      break
-    case 'this-month':
-      type = 'month'
-      break
-    case 'this-year':
-      type = 'year'
-      break
-    default:
-      return clicks
-  }
-
-  return clicks.filter((click) =>
-    dayjs(click.createdAt).isAfter(now.startOf(type)),
-  )
-}
+import {
+  countClicksByDay,
+  countClickTypes,
+  countOccurrences,
+  filterClicksByDate,
+} from '../_utils/chart'
+import React, { useState } from 'react'
 
 const LinkData = ({ link }: { link: LinkType }) => {
   const domainName = link.domain?.domainName ?? 'easylinks.com'
@@ -196,7 +121,7 @@ const LinkData = ({ link }: { link: LinkType }) => {
   ]
 
   const [dateType, updateDateType] =
-    React.useState<(typeof selectDateItems)[number]['value']>('this-year')
+    useState<(typeof selectDateItems)[number]['value']>('this-year')
 
   const filteredClicks = filterClicksByDate(link.clicks, dateType)
 
@@ -204,7 +129,7 @@ const LinkData = ({ link }: { link: LinkType }) => {
     <BaseContainer>
       <div className="max-sm:flex-col sm:items-center flex justify-between gap-5 px-5">
         <div>
-          <h3 className="font-bold text-2xl text-neutrals-6 flex overflow-hidden text-ellipsis">
+          <h3 className="text-nowrap font-bold text-2xl text-neutrals-6 flex overflow-hidden text-ellipsis">
             {`${domainName}/`}
             <p className="text-white overflow-hidden text-ellipsis">
               {link.slug}

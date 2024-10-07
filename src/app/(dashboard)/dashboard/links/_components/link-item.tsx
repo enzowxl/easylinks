@@ -65,7 +65,7 @@ const LinkItem = ({ link }: { link: LinksType }) => {
             href={dashboardLinkUrl}
             className="hover:underline font-bold text-lg overflow-hidden text-ellipsis"
           >
-            {link.title}
+            {link.title ? link.title : link.slug}
           </Link>
           <button
             className="max-sm:hidden"
@@ -85,7 +85,7 @@ const LinkItem = ({ link }: { link: LinksType }) => {
           className="max-sm:justify-center overflow-hidden text-ellipsis hover:underline flex text-neutrals-6"
         >
           {`${domainName}/`}
-          <p className="overflow-hidden text-ellipsis text-white inline-block">
+          <p className="overflow-hidden text-nowrap text-ellipsis text-white inline-block">
             {link.slug}
           </p>
         </Link>

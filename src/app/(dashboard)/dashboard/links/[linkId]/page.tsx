@@ -18,7 +18,7 @@ export async function generateMetadata({
   const link = await getLink(linkId)
 
   return {
-    title: link.title,
+    title: link.title ? link.title : link.slug,
   }
 }
 
