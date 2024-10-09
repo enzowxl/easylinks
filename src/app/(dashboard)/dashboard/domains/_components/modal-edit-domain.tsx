@@ -35,7 +35,12 @@ const ModalEditDomain = ({ domain }: { domain: Domain }) => {
   return (
     <Modal title="Edit domain">
       <form action={editDomainAction} className="flex flex-col gap-5 w-full">
-        <Input name="newDomainName" placeholder="example.com" icon={Globe} />
+        <Input
+          required
+          name="newDomainName"
+          placeholder="example.com"
+          icon={Globe}
+        />
         <Button type="submit" title="Edit" />
       </form>
     </Modal>

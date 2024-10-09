@@ -34,7 +34,12 @@ const ModalCreateDomain = () => {
   return (
     <Modal title="Create domain">
       <form action={createDomainAction} className="flex flex-col gap-5 w-full">
-        <Input name="domainName" placeholder="example.com" icon={Globe} />
+        <Input
+          required
+          name="domainName"
+          placeholder="example.com"
+          icon={Globe}
+        />
         <Button type="submit" title="Create" />
       </form>
     </Modal>

@@ -50,12 +50,26 @@ const registerUser = async (formData: FormData) => {
 
     if (findUserByEmail) throw new Error('User already exists.')
 
-    return await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: await encryptPassword(password),
-      },
+    const hashedPassword = await encryptPassword(password)
+
+    return await prisma.$transaction(async (prismaClient) => {
+      const prismaCreateUser = await prismaClient.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+        },
+      })
+
+      await prismaClient.referral.create({
+        data: {
+          user: {
+            connect: {
+              id: prismaCreateUser.id,
+            },
+          },
+        },
+      })
     })
   } catch (err) {
     if (err instanceof ZodError) {

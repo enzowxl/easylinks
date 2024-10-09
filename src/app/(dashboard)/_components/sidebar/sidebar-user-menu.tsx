@@ -2,6 +2,8 @@
 
 import { DropdownMenu } from '@/components/dropdown-menu'
 import { User } from '@prisma/client'
+import { LogOut } from 'lucide-react'
+import { signOut } from 'next-auth/react'
 import Image from 'next/image'
 
 interface SideBarUserMenuType {
@@ -11,7 +13,13 @@ interface SideBarUserMenuType {
 const SideBarUserMenu = ({ user }: SideBarUserMenuType) => {
   const dropDownMenuGroups = [
     {
-      items: [],
+      items: [
+        {
+          icon: LogOut,
+          label: 'Sign Out',
+          onClick: () => signOut(),
+        },
+      ],
     },
   ]
 

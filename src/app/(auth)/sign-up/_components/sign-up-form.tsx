@@ -38,27 +38,33 @@ const SignUpForm = () => {
       className="max-sm:w-full flex flex-col gap-5 sm:w-[400px]"
     >
       <Input
+        required
         name="name"
         label="Name"
         placeholder="John Doe"
         icon={IdCard}
         variant="big"
+        autoComplete="new-password"
       />
       <Input
+        required
         name="email"
         type="email"
         label="E-mail"
         placeholder="johndoe@example.com"
         icon={Mail}
         variant="big"
+        autoComplete="new-password"
       />
       <Input
+        required
         name="password"
         type="password"
         label="Password"
         placeholder="*************"
         icon={Lock}
         variant="big"
+        autoComplete="new-password"
       />
       <Button type="submit" title="Continue" variant="big" />
     </form>

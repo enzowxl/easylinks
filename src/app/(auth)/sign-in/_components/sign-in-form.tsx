@@ -38,6 +38,7 @@ const SignInForm = () => {
       className="max-sm:w-full flex flex-col gap-5 sm:w-[400px]"
     >
       <Input
+        required
         type="email"
         name="email"
         label="E-mail"
@@ -46,6 +47,7 @@ const SignInForm = () => {
         variant="big"
       />
       <Input
+        required
         type="password"
         name="password"
         label="Password"
