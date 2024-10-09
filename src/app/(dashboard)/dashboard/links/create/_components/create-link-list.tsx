@@ -9,10 +9,17 @@ import { Image as ImageIcon, Plus } from 'lucide-react'
 import { CreateLinkItem } from './create-link-item'
 import { ChangeEvent, useState } from 'react'
 import { toast } from '@/utils/toast'
+import { createLink } from '@/utils/db'
+import { DomainsType } from '../../../domains/_components/domain-list'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
-const CreateLinkList = () => {
+const CreateLinkList = ({ domains }: { domains: DomainsType[] }) => {
+  const router = useRouter()
+
   const [metadataPhoto, updateMetadataPhoto] = useState<string | null>(null)
+
+  const [domainName, updateDomainName] = useState<string>('')
 
   const openMetaDataInputPhoto = () => {
     document.getElementsByName('metadataPhoto')[0]?.click()
@@ -26,7 +33,17 @@ const CreateLinkList = () => {
 
   const createLinkAction = async (formData: FormData) => {
     try {
-      console.log(formData)
+      formData.append('domainName', domainName)
+
+      await createLink(formData)
+
+      toast({
+        type: 'success',
+        message: 'Successfully created',
+        style: 'subdark',
+      })
+
+      return router.push('/dashboard/links')
     } catch (err) {
       if (err instanceof Error) {
         return toast({
@@ -39,12 +56,23 @@ const CreateLinkList = () => {
   }
 
   const domainItems = () => {
-    return [
+    const defaultDomains = [
       {
         label: 'easylinks.com/',
         value: 'easylinks.com',
       },
     ]
+
+    domains.forEach((domain) => {
+      if (!domain.misconfigured) {
+        defaultDomains.push({
+          label: domain.domainName + '/',
+          value: domain.domainName,
+        })
+      }
+    })
+
+    return defaultDomains
   }
 
   return (
@@ -65,6 +93,7 @@ const CreateLinkList = () => {
           description="The destination URL of the link"
         >
           <Input
+            required
             name="destinationUrl"
             type="url"
             classnameinputcontainer="hover:scale-[1.01]"
@@ -73,6 +102,7 @@ const CreateLinkList = () => {
           />
           <div className="max-lg:flex-col flex gap-5 w-full">
             <SelectInput
+              required
               className="max-sm:flex-col max-sm:gap-3 hover:scale-[1.01] duration-500"
               label="Your easylink"
               input={{
@@ -83,6 +113,7 @@ const CreateLinkList = () => {
                 placeholder: 'my-channel',
               }}
               select={{
+                onValueChange: (value) => updateDomainName(value),
                 items: domainItems(),
                 placeholder: 'Select domain',
                 className:

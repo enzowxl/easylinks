@@ -1,5 +1,7 @@
 import { Base } from '@/app/(dashboard)/_components/base/base'
 import { CreateLinkList } from './_components/create-link-list'
+import { getAllDomains } from '@/utils/db'
+import { TitleNavType } from '@/app/(dashboard)/_components/nav/nav-auth'
 
 export async function generateMetadata() {
   return {
@@ -7,8 +9,10 @@ export async function generateMetadata() {
   }
 }
 
-const CreatePage = () => {
-  const title = [
+const CreatePage = async () => {
+  const domains = await getAllDomains()
+
+  const title: TitleNavType[] = [
     {
       label: 'Links',
       href: '/dashboard/links',
@@ -21,7 +25,7 @@ const CreatePage = () => {
 
   return (
     <Base title={title}>
-      <CreateLinkList />
+      <CreateLinkList domains={domains} />
     </Base>
   )
 }

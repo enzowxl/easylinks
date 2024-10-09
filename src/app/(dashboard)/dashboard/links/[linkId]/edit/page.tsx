@@ -1,4 +1,5 @@
 import { Base } from '@/app/(dashboard)/_components/base/base'
+import { TitleNavType } from '@/app/(dashboard)/_components/nav/nav-auth'
 import { getLink } from '@/utils/db'
 
 export async function generateMetadata({
@@ -20,10 +21,19 @@ const EditPage = async ({
 }) => {
   const link = await getLink(linkId)
 
-  const title = [
+  const title: TitleNavType[] = [
     {
-      label: `Links / ${link.id} / Edit`,
-      href: '/dashboard',
+      label: `Links`,
+      href: '/dashboard/links',
+    },
+    {
+      label: `${link.id}`,
+      href: `/dashboard/links/${link.id}`,
+      ellipsis: true,
+    },
+    {
+      label: `Edit`,
+      href: `/dashboard/links/${link.id}/edit`,
     },
   ]
 

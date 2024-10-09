@@ -1,6 +1,7 @@
 import { LinkList } from './_components/link-list'
 import { getAllLinks } from '@/utils/db'
 import { Base } from '../../_components/base/base'
+import { TitleNavType } from '../../_components/nav/nav-auth'
 
 export async function generateMetadata() {
   return {
@@ -11,7 +12,7 @@ export async function generateMetadata() {
 const LinksPage = async () => {
   const links = await getAllLinks()
 
-  const title = [
+  const title: TitleNavType[] = [
     {
       label: 'Links',
       href: '/dashboard/links',

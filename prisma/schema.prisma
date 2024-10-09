@@ -24,10 +24,28 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  referral   Referral? @relation("UserReferral", fields: [referralId], references: [id], onDelete: Cascade)
+  referralId String?   @unique @db.ObjectId
+
+  referencedUsers   Referral? @relation(fields: [referencedUsersId], references: [id], onDelete: Cascade)
+  referencedUsersId String?   @unique @db.ObjectId
+
   domains Domain[]
   links   Link[]
 
   @@map("users")
+}
+
+model Referral {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  referId String @default(cuid())
+
+  user User? @relation("UserReferral")
+
+  users User[]
+
+  @@map("referrals")
 }
 
 model Domain {

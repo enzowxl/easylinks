@@ -1,6 +1,7 @@
-import { object, string } from 'zod'
-import validateDomain from 'is-valid-domain'
+import { object, string, instanceof as instanceof_ } from 'zod'
 import { formData } from 'zod-form-data'
+import { createSlug } from '@/utils/slug'
+import validateDomain from 'is-valid-domain'
 
 const signInSchema = object({
   email: string({ message: 'Email is required' })
@@ -20,8 +21,8 @@ const signUpSchema = formData({
   email: string({ message: 'Email is required' })
     .min(1, { message: 'Email is required' })
     .email({ message: 'Invalid email' }),
-  password: string({ message: 'Password is required' }).min(1, {
-    message: 'Password is required',
+  password: string({ message: 'Password is required' }).min(8, {
+    message: 'Password must be more than 8 characters',
   }),
 })
 
@@ -43,4 +44,42 @@ const editDomainSchema = formData({
   ),
 })
 
-export { signInSchema, signUpSchema, createDomainSchema, editDomainSchema }
+const createLinkSchema = formData({
+  destinationUrl: string({ message: 'Destination URL is required' }).url({
+    message: 'Invalid destination URL',
+  }),
+  destinationSlug: string({ message: 'Destination slug is required' }).refine(
+    (value) => createSlug(value),
+  ),
+  domainName: string({ message: 'Domain is required' })
+    .refine((value) => validateDomain(value), {
+      message: 'Invalid domain',
+    })
+    .optional(),
+  destinationTitle: string({
+    message: 'Invalid destination title',
+  }).optional(),
+  destinationDescription: string({
+    message: 'Invalid destination description',
+  }).optional(),
+  metadataPhoto: instanceof_(File, {
+    message: 'Invalid metadata photo ',
+  }).optional(),
+  metadataTitle: string({
+    message: 'Invalid metadata title',
+  }).optional(),
+  metadataDescription: string({
+    message: 'Invalid metadata description',
+  }).optional(),
+  utilsPassword: string({
+    message: 'Invalid utils password',
+  }).optional(),
+})
+
+export {
+  signInSchema,
+  signUpSchema,
+  createDomainSchema,
+  editDomainSchema,
+  createLinkSchema,
+}

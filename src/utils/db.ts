@@ -3,16 +3,21 @@
 import { prisma } from '@/lib/prisma'
 import { encryptPassword, verifyPassword } from './password'
 import { auth, InvalidLoginError } from '@/auth'
-import { createDomainSchema, editDomainSchema, signUpSchema } from '@/lib/zod'
-import { ZodError } from 'zod'
-import { revalidatePath } from 'next/cache'
-import { notFound } from 'next/navigation'
-import { Domain } from '@prisma/client'
+import {
+  createDomainSchema,
+  createLinkSchema,
+  editDomainSchema,
+  signUpSchema,
+} from '@/lib/zod'
 import {
   createDomainInVercel,
   deleteDomainInVercel,
   getAllDomainsInVercel,
 } from './vercel'
+import { ZodError } from 'zod'
+import { revalidatePath } from 'next/cache'
+import { notFound } from 'next/navigation'
+import { Domain } from '@prisma/client'
 
 const authorizeUser = async (email: string, password: string) => {
   const findUserByEmail = await prisma.user.findUnique({
@@ -86,6 +91,88 @@ const createDomain = async (formData: FormData) => {
     })
 
     return revalidatePath('/dashboard/domains', 'page')
+  } catch (err) {
+    if (err instanceof ZodError) {
+      throw new Error(err.errors[0].message)
+    }
+    if (err instanceof Error) {
+      throw new Error(err.message)
+    }
+  }
+}
+
+const createLink = async (formData: FormData) => {
+  try {
+    const session = await auth()
+
+    if (!session?.user) throw new Error('Unauthorized.')
+
+    const {
+      destinationSlug,
+      destinationUrl,
+      destinationDescription,
+      destinationTitle,
+      metadataDescription,
+      // metadataPhoto,
+      metadataTitle,
+      utilsPassword,
+      domainName,
+    } = await createLinkSchema.parseAsync(formData)
+
+    const findLinkBySlug = await prisma.link.findUnique({
+      where: { slug: destinationSlug },
+    })
+
+    if (findLinkBySlug) throw new Error('Slug already exists.')
+
+    const hashedPassword = utilsPassword
+      ? await encryptPassword(utilsPassword)
+      : undefined
+
+    await prisma.$transaction(async (prismaClient) => {
+      const prismaCreateLink = await prismaClient.link.create({
+        data: {
+          title: destinationTitle,
+          description: destinationDescription,
+          slug: destinationSlug,
+          url: destinationUrl,
+          ip: '',
+          metaData: {
+            create: {
+              title: metadataTitle,
+              description: metadataDescription,
+              photoId: undefined,
+              photoUrl: undefined,
+            },
+          },
+          util: {
+            create: {
+              password: hashedPassword,
+            },
+          },
+          userId: session?.user.sub,
+        },
+      })
+
+      if (domainName) {
+        const findDomainByDomainName = await prismaClient.domain.findUnique({
+          where: { domainName },
+        })
+
+        if (!findDomainByDomainName) throw new Error('Domain not found.')
+
+        await prismaClient.link.update({
+          where: { id: prismaCreateLink.id },
+          data: {
+            domain: {
+              connect: { domainName },
+            },
+          },
+        })
+      }
+    })
+
+    return revalidatePath('/dashboard/links', 'page')
   } catch (err) {
     if (err instanceof ZodError) {
       throw new Error(err.errors[0].message)
@@ -275,6 +362,7 @@ export {
   authorizeUser,
   registerUser,
   createDomain,
+  createLink,
   getMe,
   getLink,
   getAllDomains,

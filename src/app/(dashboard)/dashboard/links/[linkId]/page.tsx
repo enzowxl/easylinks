@@ -2,6 +2,7 @@ import { LinkData } from './_components/link-data'
 import { Prisma } from '@prisma/client'
 import { getLink } from '@/utils/db'
 import { Base } from '@/app/(dashboard)/_components/base/base'
+import { TitleNavType } from '@/app/(dashboard)/_components/nav/nav-auth'
 
 export type LinkType = Prisma.LinkGetPayload<{
   include: {
@@ -29,7 +30,7 @@ const LinkPage = async ({
 }) => {
   const link = await getLink(linkId)
 
-  const title = [
+  const title: TitleNavType[] = [
     {
       label: 'Links',
       href: '/dashboard/links',
@@ -37,6 +38,7 @@ const LinkPage = async ({
     {
       label: link.id,
       href: `/dashboard/links/${link.id}`,
+      ellipsis: true,
     },
   ]
 

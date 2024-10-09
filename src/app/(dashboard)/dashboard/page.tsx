@@ -1,7 +1,8 @@
 import { Base } from '../_components/base/base'
+import { TitleNavType } from '../_components/nav/nav-auth'
 
 const DashboardPage = () => {
-  const title = [
+  const title: TitleNavType[] = [
     {
       label: 'Dashboard',
       href: '/dashboard',
