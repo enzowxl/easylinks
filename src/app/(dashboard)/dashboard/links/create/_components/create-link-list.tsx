@@ -58,8 +58,8 @@ const CreateLinkList = ({ domains }: { domains: DomainsType[] }) => {
   const domainItems = () => {
     const defaultDomains = [
       {
-        label: 'easylinks.com/',
-        value: 'easylinks.com',
+        label: process.env.MAIN_DOMAIN + '/',
+        value: process.env.MAIN_DOMAIN as string,
       },
     ]
 
