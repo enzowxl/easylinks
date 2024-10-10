@@ -88,7 +88,7 @@ model Domain {
 
 model Link {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  slug        String  @unique
+  slug        String
   url         String
   ip          String
   title       String?
