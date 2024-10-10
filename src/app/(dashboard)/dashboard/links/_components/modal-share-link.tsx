@@ -11,7 +11,7 @@ const ModalShareLink = ({ link }: { link: LinksType }) => {
 
   const { dispatch } = useModalStore((state) => state)
 
-  const domainName = link.domain?.domainName ?? 'easylinks.com'
+  const domainName = link.domain?.domainName ?? process.env.NEXT_PUBLIC_DOMAIN
   const redirectUrl = `https://${domainName}/` + link.slug
 
   const copyRedirectUrlToClipboard = () => {

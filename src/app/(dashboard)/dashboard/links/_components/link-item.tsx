@@ -14,7 +14,7 @@ const LinkItem = ({ link }: { link: LinksType }) => {
 
   const { dispatch } = useModalStore((state) => state)
 
-  const domainName = link.domain?.domainName ?? 'easylinks.com'
+  const domainName = link.domain?.domainName ?? process.env.NEXT_PUBLIC_DOMAIN
   const dashboardLinkUrl = '/dashboard/links/' + link.id
   const redirectUrl = `https://${domainName}/` + link.slug
   const externalWebsiteUrl = link.url

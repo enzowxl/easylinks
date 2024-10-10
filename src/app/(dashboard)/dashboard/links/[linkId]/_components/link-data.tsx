@@ -16,7 +16,7 @@ import {
 import React, { useState } from 'react'
 
 const LinkData = ({ link }: { link: LinkType }) => {
-  const domainName = link.domain?.domainName ?? 'easylinks.com'
+  const domainName = link.domain?.domainName ?? process.env.NEXT_PUBLIC_DOMAIN
 
   const clickTypeCounts = countClickTypes(link.clicks)
 
