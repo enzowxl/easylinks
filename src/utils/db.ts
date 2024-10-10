@@ -168,7 +168,7 @@ const createLink = async (formData: FormData) => {
         },
       })
 
-      if (domainName && domainName !== process.env.MAIN_DOMAIN) {
+      if (domainName && domainName !== process.env.NEXTAUTH_DOMAIN) {
         const findDomainByDomainName = await prismaClient.domain.findUnique({
           where: { domainName },
         })
