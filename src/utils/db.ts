@@ -133,57 +133,48 @@ const createLink = async (formData: FormData) => {
       domainName,
     } = await createLinkSchema.parseAsync(formData)
 
+    const hashedPassword = utilsPassword
+      ? await encryptPassword(utilsPassword)
+      : undefined
+
+    const data = {
+      title: destinationTitle,
+      description: destinationDescription,
+      slug: destinationSlug,
+      url: destinationUrl,
+      ip: '',
+      metaData: {
+        create: {
+          title: metadataTitle,
+          description: metadataDescription,
+          photoId: undefined,
+          photoUrl: undefined,
+        },
+      },
+      util: {
+        create: {
+          password: hashedPassword,
+        },
+      },
+      userId: session?.user.sub,
+    }
+
     const findLinkBySlug = await prisma.link.findUnique({
       where: { slug: destinationSlug },
     })
 
     if (findLinkBySlug) throw new Error('Slug already exists.')
 
-    const hashedPassword = utilsPassword
-      ? await encryptPassword(utilsPassword)
-      : undefined
-
-    await prisma.$transaction(async (prismaClient) => {
-      const prismaCreateLink = await prismaClient.link.create({
-        data: {
-          title: destinationTitle,
-          description: destinationDescription,
-          slug: destinationSlug,
-          url: destinationUrl,
-          ip: '',
-          metaData: {
-            create: {
-              title: metadataTitle,
-              description: metadataDescription,
-              photoId: undefined,
-              photoUrl: undefined,
-            },
-          },
-          util: {
-            create: {
-              password: hashedPassword,
-            },
-          },
-          userId: session?.user.sub,
-        },
+    if (domainName && domainName !== process.env.NEXTAUTH_DOMAIN) {
+      const findDomainByDomainName = await prisma.domain.findUnique({
+        where: { domainName },
       })
 
-      if (domainName && domainName !== process.env.NEXTAUTH_DOMAIN) {
-        const findDomainByDomainName = await prismaClient.domain.findUnique({
-          where: { domainName },
-        })
+      if (!findDomainByDomainName) throw new Error('Domain not found.')
+    }
 
-        if (!findDomainByDomainName) throw new Error('Domain not found.')
-
-        await prismaClient.link.update({
-          where: { id: prismaCreateLink.id },
-          data: {
-            domain: {
-              connect: { domainName },
-            },
-          },
-        })
-      }
+    await prisma.link.create({
+      data,
     })
 
     return revalidatePath('/dashboard/links', 'page')

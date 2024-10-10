@@ -1,5 +1,10 @@
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { headers } from 'next/headers'
+
+type RedirectLinkType = Prisma.LinkGetPayload<{
+  include: { domain: true }
+}>
 
 const RedirectPage = async ({
   params: { slug },
@@ -9,12 +14,13 @@ const RedirectPage = async ({
   const log = []
   const headersList = headers()
   const host = headersList.get('host')
+  const ip = headersList.get('x-real-ip')
 
   const findDomainByHost = await prisma.domain.findUnique({
     where: { domainName: host || undefined },
   })
 
-  let findLinkBySlug
+  let findLinkBySlug: RedirectLinkType | null
 
   if (findDomainByHost && findDomainByHost?.domainName === host) {
     findLinkBySlug = await prisma.link.findUnique({
@@ -47,6 +53,7 @@ const RedirectPage = async ({
   return (
     <div>
       <p>host: {host}</p>
+      <p>ip: {ip}</p>
       <br />
       <pre>findLinkBySlug: {JSON.stringify(findLinkBySlug, null, 2)}</pre>
       <br />
