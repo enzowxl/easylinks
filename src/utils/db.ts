@@ -143,14 +143,14 @@ const createLink = async (formData: FormData) => {
     if (domainName && domainName !== process.env.NEXTAUTH_DOMAIN) {
       if (!findDomainByDomainName) throw new Error('Domain not found.')
 
-      findLinkBySlug = await prisma.link.findUnique({
+      findLinkBySlug = await prisma.link.findFirst({
         where: {
           slug: destinationSlug,
           domainId: findDomainByDomainName.id,
         },
       })
     } else {
-      findLinkBySlug = await prisma.link.findUnique({
+      findLinkBySlug = await prisma.link.findFirst({
         where: {
           slug: destinationSlug,
           domain: null,

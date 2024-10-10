@@ -25,7 +25,7 @@ const RedirectPage = async ({
   let findLinkBySlug: RedirectLinkType | null
 
   if (findDomainByHost && findDomainByHost?.domainName === host) {
-    findLinkBySlug = await prisma.link.findUnique({
+    findLinkBySlug = await prisma.link.findFirst({
       where: {
         slug,
         domain: {
@@ -39,7 +39,7 @@ const RedirectPage = async ({
 
     log.push('o link tem dominio')
   } else {
-    findLinkBySlug = await prisma.link.findUnique({
+    findLinkBySlug = await prisma.link.findFirst({
       where: { slug, domain: null },
       include: {
         domain: true,
