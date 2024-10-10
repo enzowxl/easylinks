@@ -2,7 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { encryptPassword, verifyPassword } from './password'
-import { auth, InvalidLoginError } from '@/auth'
+import { InvalidLoginError } from '@/auth'
 import {
   createDomainSchema,
   createLinkSchema,
@@ -20,6 +20,7 @@ import { notFound } from 'next/navigation'
 import { Domain, Link } from '@prisma/client'
 import { getIp } from './headers'
 import { sendError } from './error'
+import { isAuthenticated } from './verify'
 
 interface ResponseAction {
   error?: string
@@ -93,9 +94,7 @@ const createDomain = async (
   formData: FormData,
 ): Promise<ResponseAction | void> => {
   try {
-    const session = await auth()
-
-    if (!session?.user) throw new Error('Unauthorized.')
+    const { user } = await isAuthenticated()
 
     const { domainName } = await createDomainSchema.parseAsync(formData)
 
@@ -110,7 +109,7 @@ const createDomain = async (
     await prisma.domain.create({
       data: {
         domainName,
-        userId: session?.user.sub,
+        userId: user.sub,
       },
     })
 
@@ -129,9 +128,7 @@ const createLink = async (
   formData: FormData,
 ): Promise<ResponseAction | void> => {
   try {
-    const session = await auth()
-
-    if (!session?.user) throw new Error('Unauthorized.')
+    const { user } = await isAuthenticated()
 
     const {
       destinationSlug,
@@ -148,7 +145,7 @@ const createLink = async (
     let findLinkBySlug: Link | null
 
     const findDomainByDomainName = await prisma.domain.findUnique({
-      where: { domainName, userId: session.user.id },
+      where: { domainName, userId: user.id },
     })
 
     if (domainName && domainName !== process.env.NEXTAUTH_DOMAIN) {
@@ -194,7 +191,7 @@ const createLink = async (
           },
         },
         domainId: findDomainByDomainName?.id,
-        userId: session?.user.sub,
+        userId: user.sub,
       },
     })
 
@@ -211,15 +208,13 @@ const createLink = async (
 
 const getMe = async () => {
   try {
-    const session = await auth()
+    const { user } = await isAuthenticated({ isNotFound: true })
 
-    const user = await prisma.user.findUnique({
-      where: { id: session?.user.sub },
+    const findUserById = await prisma.user.findUnique({
+      where: { id: user.sub },
     })
 
-    if (!session || !user) return notFound()
-
-    return user
+    return findUserById
   } catch (err) {
     return notFound()
   }
@@ -227,12 +222,10 @@ const getMe = async () => {
 
 const getLink = async (linkId: string) => {
   try {
-    const session = await auth()
-
-    if (!session?.user) return notFound()
+    const { user } = await isAuthenticated({ isNotFound: true })
 
     const findLinkById = await prisma.link.findUnique({
-      where: { id: linkId, userId: session.user.id },
+      where: { id: linkId, userId: user.id },
       include: { domain: true, clicks: true },
     })
 
@@ -246,12 +239,10 @@ const getLink = async (linkId: string) => {
 
 const getAllLinks = async () => {
   try {
-    const session = await auth()
-
-    if (!session?.user) return notFound()
+    const { user } = await isAuthenticated({ isNotFound: true })
 
     const findManyLinksByUserId = await prisma.link.findMany({
-      where: { userId: session?.user.sub },
+      where: { userId: user.sub },
       include: {
         domain: true,
         clicks: true,
@@ -268,12 +259,10 @@ const getAllLinks = async () => {
 
 const getAllDomains = async () => {
   try {
-    const session = await auth()
-
-    if (!session?.user) return notFound()
+    const { user } = await isAuthenticated({ isNotFound: true })
 
     const findManyDomainsByUserId = await prisma.domain.findMany({
-      where: { userId: session?.user.sub },
+      where: { userId: user.sub },
     })
 
     const domains: Domain[] = [...findManyDomainsByUserId]
@@ -290,9 +279,7 @@ const deleteDomain = async (
   domainName: string,
 ): Promise<ResponseAction | void> => {
   try {
-    const session = await auth()
-
-    if (!session?.user) throw new Error('Unauthorized.')
+    await isAuthenticated()
 
     const findDomainByDomainName = await prisma.domain.findUnique({
       where: {
@@ -321,9 +308,7 @@ const deleteDomain = async (
 
 const deleteLink = async (linkId: string): Promise<ResponseAction | void> => {
   try {
-    const session = await auth()
-
-    if (!session?.user) throw new Error('Unauthorized.')
+    await isAuthenticated()
 
     const findLinkById = await prisma.link.findUnique({
       where: {
@@ -353,9 +338,7 @@ const editDomain = async (
   domainName: string,
 ): Promise<ResponseAction | void> => {
   try {
-    const session = await auth()
-
-    if (!session?.user) throw new Error('Unauthorized.')
+    await isAuthenticated()
 
     const { newDomainName } = await editDomainSchema.parseAsync(formData)
 
