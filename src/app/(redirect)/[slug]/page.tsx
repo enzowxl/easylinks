@@ -16,7 +16,7 @@ const RedirectPage = async ({
 
   let findLinkBySlug
 
-  if (findDomainByHost) {
+  if (findDomainByHost && findDomainByHost?.domainName !== host) {
     findLinkBySlug = await prisma.link.findUnique({
       where: {
         slug,
@@ -28,21 +28,16 @@ const RedirectPage = async ({
         domain: true,
       },
     })
+
     log.push('o link tem dominio')
   } else {
     findLinkBySlug = await prisma.link.findUnique({
-      where: { slug },
+      where: { slug, domain: null },
       include: {
         domain: true,
       },
     })
     log.push('o link nao tem dominio')
-  }
-
-  if (findLinkBySlug?.domain) {
-    if (findDomainByHost?.domainName !== host) {
-      log.push('nao tem dominio igual')
-    }
   }
 
   if (!findLinkBySlug) {

@@ -14,9 +14,11 @@ const LinkItem = ({ link }: { link: LinksType }) => {
 
   const { dispatch } = useModalStore((state) => state)
 
+  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
+
   const domainName = link.domain?.domainName ?? process.env.NEXT_PUBLIC_DOMAIN
   const dashboardLinkUrl = '/dashboard/links/' + link.id
-  const redirectUrl = `https://${domainName}/` + link.slug
+  const redirectUrl = `${protocol}://${domainName}/` + link.slug
   const externalWebsiteUrl = link.url
 
   const dropDownMenuGroups = [
