@@ -16,7 +16,7 @@ const RedirectPage = async ({
 
   let findLinkBySlug
 
-  if (findDomainByHost && findDomainByHost?.domainName !== host) {
+  if (findDomainByHost && findDomainByHost?.domainName === host) {
     findLinkBySlug = await prisma.link.findUnique({
       where: {
         slug,
