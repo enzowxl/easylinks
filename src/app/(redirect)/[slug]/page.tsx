@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
-import { formattedHeaders } from '@/utils/headers'
+import { getIp } from '@/utils/headers'
 import { Prisma } from '@prisma/client'
+import { headers } from 'next/headers'
 
 type RedirectLinkType = Prisma.LinkGetPayload<{
   include: { domain: true }
@@ -12,7 +13,10 @@ const RedirectPage = async ({
   params: { slug: string }
 }) => {
   const log = []
-  const { ip, protocol, host } = formattedHeaders()
+  const headersList = headers()
+  const host = headersList.get('host')
+  const protocol = headersList.get('x-forwarded-proto')
+  const ip = getIp()
 
   const findDomainByHost = await prisma.domain.findUnique({
     where: { domainName: host || undefined },

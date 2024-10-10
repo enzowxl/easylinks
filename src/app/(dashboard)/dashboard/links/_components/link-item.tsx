@@ -8,14 +8,13 @@ import { toast } from '@/utils/toast'
 import { useRouter } from 'next/navigation'
 import { ModalShareLink } from './modal-share-link'
 import Link from 'next/link'
-import { formattedHeaders } from '@/utils/headers'
 
 const LinkItem = ({ link }: { link: LinksType }) => {
   const router = useRouter()
 
   const { dispatch } = useModalStore((state) => state)
 
-  const { protocol } = formattedHeaders()
+  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
 
   const domainName = link.domain?.domainName ?? process.env.NEXT_PUBLIC_DOMAIN
   const dashboardLinkUrl = '/dashboard/links/' + link.id
