@@ -5,13 +5,14 @@ import { toast } from '@/utils/toast'
 import { LinksType } from './link-list'
 import { QRCode } from 'react-qrcode-logo'
 import { useRef } from 'react'
+import { formattedHeaders } from '@/utils/headers'
 
 const ModalShareLink = ({ link }: { link: LinksType }) => {
   const qrCodeRef = useRef<QRCode | null>(null)
 
   const { dispatch } = useModalStore((state) => state)
 
-  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
+  const { protocol } = formattedHeaders()
 
   const domainName = link.domain?.domainName ?? process.env.NEXT_PUBLIC_DOMAIN
   const redirectUrl = `${protocol}://${domainName}/` + link.slug

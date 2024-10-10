@@ -2,6 +2,14 @@
 
 import { headers } from 'next/headers'
 
+function formattedHeaders() {
+  return {
+    ip: getIp(),
+    protocol: headers().get('x-forwarded-proto'),
+    host: headers().get('host'),
+  }
+}
+
 function getIp() {
   const FALLBACK_IP_ADDRESS = '0.0.0.0'
   const forwardedFor = headers().get('x-forwarded-for')
@@ -13,4 +21,4 @@ function getIp() {
   return headers().get('x-real-ip') ?? FALLBACK_IP_ADDRESS
 }
 
-export { getIp }
+export { formattedHeaders }
