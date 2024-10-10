@@ -214,6 +214,8 @@ const getMe = async () => {
       where: { id: user.sub },
     })
 
+    if (!findUserById) return notFound()
+
     return findUserById
   } catch (err) {
     return notFound()
