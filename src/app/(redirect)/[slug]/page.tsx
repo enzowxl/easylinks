@@ -14,12 +14,12 @@ const RedirectPage = async ({
 }) => {
   const log = []
   const headersList = headers()
-  const host = headersList.get('host')
+  const host = headersList.get('host') as string
   const protocol = headersList.get('x-forwarded-proto')
   const ip = getIp()
 
   const findDomainByHost = await prisma.domain.findUnique({
-    where: { domainName: host || undefined },
+    where: { domainName: host },
   })
 
   let findLinkBySlug: RedirectLinkType | null
