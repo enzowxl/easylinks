@@ -32,27 +32,25 @@ const CreateLinkList = ({ domains }: { domains: DomainsType[] }) => {
   }
 
   const createLinkAction = async (formData: FormData) => {
-    try {
-      formData.append('domainName', domainName)
+    formData.append('domainName', domainName)
 
-      await createLink(formData)
+    const responseAction = await createLink(formData)
 
-      toast({
-        type: 'success',
-        message: 'Successfully created',
-        style: 'subdark',
+    if (responseAction?.error) {
+      return toast({
+        type: 'error',
+        message: responseAction.error,
+        style: 'dark',
       })
-
-      return router.push('/dashboard/links')
-    } catch (err) {
-      if (err instanceof Error) {
-        return toast({
-          type: 'error',
-          message: err.message,
-          style: 'subdark',
-        })
-      }
     }
+
+    toast({
+      type: 'success',
+      message: 'Successfully created',
+      style: 'subdark',
+    })
+
+    return router.push('/dashboard/links')
   }
 
   const domainItems = () => {

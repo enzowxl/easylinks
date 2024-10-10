@@ -11,25 +11,23 @@ const ModalEditDomain = ({ domain }: { domain: Domain }) => {
   const { dispatch } = useModalStore((state) => state)
 
   const editDomainAction = async (formData: FormData) => {
-    try {
-      await editDomain(formData, domain.domainName)
+    const responseAction = await editDomain(formData, domain.domainName)
 
-      toast({
-        type: 'success',
-        message: 'Successfully edited',
+    if (responseAction?.error) {
+      return toast({
+        type: 'error',
+        message: responseAction.error,
         style: 'dark',
       })
-
-      return dispatch.closeModal()
-    } catch (err) {
-      if (err instanceof Error) {
-        return toast({
-          type: 'error',
-          message: err.message,
-          style: 'dark',
-        })
-      }
     }
+
+    toast({
+      type: 'success',
+      message: 'Successfully edited',
+      style: 'dark',
+    })
+
+    return dispatch.closeModal()
   }
 
   return (

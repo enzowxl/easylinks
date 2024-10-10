@@ -11,25 +11,23 @@ const SignUpForm = () => {
   const router = useRouter()
 
   const registerUserAction = async (formData: FormData) => {
-    try {
-      await registerUser(formData)
+    const responseAction = await registerUser(formData)
 
-      toast({
-        type: 'success',
-        message: 'Successfully registered',
+    if (responseAction?.error) {
+      return toast({
+        type: 'error',
+        message: responseAction.error,
         style: 'dark',
       })
-
-      return router.push('/sign-in')
-    } catch (err) {
-      if (err instanceof Error) {
-        return toast({
-          type: 'error',
-          message: err.message,
-          style: 'dark',
-        })
-      }
     }
+
+    toast({
+      type: 'success',
+      message: 'Successfully registered',
+      style: 'dark',
+    })
+
+    return router.push('/sign-in')
   }
 
   return (

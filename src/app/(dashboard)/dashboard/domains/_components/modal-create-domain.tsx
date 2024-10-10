@@ -10,25 +10,23 @@ const ModalCreateDomain = () => {
   const { dispatch } = useModalStore((state) => state)
 
   const createDomainAction = async (formData: FormData) => {
-    try {
-      await createDomain(formData)
+    const responseAction = await createDomain(formData)
 
-      toast({
-        type: 'success',
-        message: 'Successfully created',
+    if (responseAction?.error) {
+      return toast({
+        type: 'error',
+        message: responseAction.error,
         style: 'dark',
       })
-
-      return dispatch.closeModal()
-    } catch (err) {
-      if (err instanceof Error) {
-        return toast({
-          type: 'error',
-          message: err.message,
-          style: 'dark',
-        })
-      }
     }
+
+    toast({
+      type: 'success',
+      message: 'Successfully created',
+      style: 'dark',
+    })
+
+    return dispatch.closeModal()
   }
 
   return (

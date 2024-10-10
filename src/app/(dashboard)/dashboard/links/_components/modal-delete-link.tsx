@@ -9,25 +9,23 @@ const ModalDeleteLink = ({ link }: { link: Link }) => {
   const { dispatch } = useModalStore((state) => state)
 
   const deleteLinkAction = async () => {
-    try {
-      await deleteLink(link.id)
+    const responseAction = await deleteLink(link.id)
 
-      toast({
-        type: 'success',
-        message: 'Successfully deleted',
+    if (responseAction?.error) {
+      return toast({
+        type: 'error',
+        message: responseAction.error,
         style: 'dark',
       })
-
-      return dispatch.closeModal()
-    } catch (err) {
-      if (err instanceof Error) {
-        return toast({
-          type: 'error',
-          message: err.message,
-          style: 'dark',
-        })
-      }
     }
+
+    toast({
+      type: 'success',
+      message: 'Successfully deleted',
+      style: 'dark',
+    })
+
+    return dispatch.closeModal()
   }
 
   return (

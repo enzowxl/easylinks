@@ -19,6 +19,11 @@ import { revalidatePath } from 'next/cache'
 import { notFound } from 'next/navigation'
 import { Domain, Link } from '@prisma/client'
 import { getIp } from './headers'
+import { sendError } from './error'
+
+interface ResponseAction {
+  error?: string
+}
 
 const authorizeUser = async (email: string, password: string) => {
   const findUserByEmail = await prisma.user.findUnique({
@@ -41,7 +46,9 @@ const authorizeUser = async (email: string, password: string) => {
   return findUserByEmail
 }
 
-const registerUser = async (formData: FormData) => {
+const registerUser = async (
+  formData: FormData,
+): Promise<ResponseAction | void> => {
   try {
     const { name, email, password } = await signUpSchema.parseAsync(formData)
 
@@ -74,15 +81,17 @@ const registerUser = async (formData: FormData) => {
     })
   } catch (err) {
     if (err instanceof ZodError) {
-      throw new Error(err.errors[0].message)
+      return sendError(err.errors[0].message)
     }
     if (err instanceof Error) {
-      throw new Error(err.message)
+      return sendError(err.message)
     }
   }
 }
 
-const createDomain = async (formData: FormData) => {
+const createDomain = async (
+  formData: FormData,
+): Promise<ResponseAction | void> => {
   try {
     const session = await auth()
 
@@ -108,15 +117,17 @@ const createDomain = async (formData: FormData) => {
     return revalidatePath('/dashboard/domains', 'page')
   } catch (err) {
     if (err instanceof ZodError) {
-      throw new Error(err.errors[0].message)
+      return sendError(err.errors[0].message)
     }
     if (err instanceof Error) {
-      throw new Error(err.message)
+      return sendError(err.message)
     }
   }
 }
 
-const createLink = async (formData: FormData) => {
+const createLink = async (
+  formData: FormData,
+): Promise<ResponseAction | void> => {
   try {
     const session = await auth()
 
@@ -190,10 +201,10 @@ const createLink = async (formData: FormData) => {
     return revalidatePath('/dashboard/links', 'page')
   } catch (err) {
     if (err instanceof ZodError) {
-      throw new Error(err.errors[0].message)
+      return sendError(err.errors[0].message)
     }
     if (err instanceof Error) {
-      throw new Error(err.message)
+      return sendError(err.message)
     }
   }
 }
@@ -275,7 +286,9 @@ const getAllDomains = async () => {
   }
 }
 
-const deleteDomain = async (domainName: string) => {
+const deleteDomain = async (
+  domainName: string,
+): Promise<ResponseAction | void> => {
   try {
     const session = await auth()
 
@@ -298,15 +311,15 @@ const deleteDomain = async (domainName: string) => {
     return revalidatePath('/dashboard/domains', 'page')
   } catch (err) {
     if (err instanceof ZodError) {
-      throw new Error(err.errors[0].message)
+      return sendError(err.errors[0].message)
     }
     if (err instanceof Error) {
-      throw new Error(err.message)
+      return sendError(err.message)
     }
   }
 }
 
-const deleteLink = async (linkId: string) => {
+const deleteLink = async (linkId: string): Promise<ResponseAction | void> => {
   try {
     const session = await auth()
 
@@ -327,15 +340,18 @@ const deleteLink = async (linkId: string) => {
     return revalidatePath('/dashboard/links', 'page')
   } catch (err) {
     if (err instanceof ZodError) {
-      throw new Error(err.errors[0].message)
+      return sendError(err.errors[0].message)
     }
     if (err instanceof Error) {
-      throw new Error(err.message)
+      return sendError(err.message)
     }
   }
 }
 
-const editDomain = async (formData: FormData, domainName: string) => {
+const editDomain = async (
+  formData: FormData,
+  domainName: string,
+): Promise<ResponseAction | void> => {
   try {
     const session = await auth()
 
@@ -365,10 +381,10 @@ const editDomain = async (formData: FormData, domainName: string) => {
     return revalidatePath('/dashboard/domains', 'page')
   } catch (err) {
     if (err instanceof ZodError) {
-      throw new Error(err.errors[0].message)
+      return sendError(err.errors[0].message)
     }
     if (err instanceof Error) {
-      throw new Error(err.message)
+      return sendError(err.message)
     }
   }
 }
