@@ -12,9 +12,9 @@ const AuthLayout = async ({
   if (session?.user) return redirect('/dashboard')
 
   return (
-    <div className="flex h-screen bg-gradient-to-b from-neutrals-12 to-dark">
+    <main className="flex h-screen bg-gradient-to-b from-neutrals-12 to-dark">
       {children}
-    </div>
+    </main>
   )
 }
 
