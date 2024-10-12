@@ -30,11 +30,11 @@ const LinkData = ({ link }: { link: LinkType }) => {
     redirectedBy: redirectedByCounts,
   } = countOccurrences(
     link.clicks.map((click) => ({
-      browser: click.browser,
-      device: click.device,
-      platform: click.platform,
-      country: click.country,
-      redirectedBy: click.redirectedBy,
+      device: click.device || 'Unknown',
+      browser: click.browser || 'Unknown',
+      platform: click.platform || 'Unknown',
+      country: click.country || 'Unknown',
+      redirectedBy: click.redirectedBy || 'Unknown',
     })),
   )
 

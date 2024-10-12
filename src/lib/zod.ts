@@ -14,6 +14,12 @@ const signInSchema = object({
   // .max(32, { message: 'Password must be less than 32 characters' }),
 })
 
+const redirectSchema = formData({
+  password: string({ message: 'Password is required' }).min(1, {
+    message: 'Password is required',
+  }),
+})
+
 const signUpSchema = formData({
   name: string({ message: 'Name is required' }).min(4, {
     message: 'Name must be more than 4 characters',
@@ -78,6 +84,7 @@ const createLinkSchema = formData({
 
 export {
   signInSchema,
+  redirectSchema,
   signUpSchema,
   createDomainSchema,
   editDomainSchema,

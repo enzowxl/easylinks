@@ -1,5 +1,7 @@
 'use server'
 
+// @ts-ignore
+import ipinfo from 'ipinfo'
 import { headers } from 'next/headers'
 
 function getIp() {
@@ -13,4 +15,17 @@ function getIp() {
   return headers().get('x-real-ip') ?? FALLBACK_IP_ADDRESS
 }
 
-export { getIp }
+const getCountry = async () => {
+  let country
+
+  try {
+    const response = await ipinfo(getIp())
+    country = response.country
+
+    return country
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export { getIp, getCountry }

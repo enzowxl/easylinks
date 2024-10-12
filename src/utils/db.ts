@@ -7,6 +7,7 @@ import {
   createDomainSchema,
   createLinkSchema,
   editDomainSchema,
+  redirectSchema,
   signUpSchema,
 } from '@/lib/zod'
 import {
@@ -17,8 +18,8 @@ import {
 import { ZodError } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { notFound } from 'next/navigation'
-import { Domain, Link } from '@prisma/client'
-import { getIp } from './headers'
+import { Domain, Link, Prisma } from '@prisma/client'
+import { getIp } from './network'
 import { sendError } from './error'
 import { isAuthenticated } from './verify'
 
@@ -31,20 +32,52 @@ const authorizeUser = async (email: string, password: string) => {
     where: { email },
   })
 
-  if (!findUserByEmail) {
+  if (!findUserByEmail)
     throw new InvalidLoginError('Email or password is incorrect.')
-  }
 
   const comparedPassword = await verifyPassword(
     password,
     findUserByEmail.password,
   )
 
-  if (!comparedPassword) {
+  if (!comparedPassword)
     throw new InvalidLoginError('Email or password is incorrect.')
-  }
 
   return findUserByEmail
+}
+
+const authorizeRedirect = async (
+  linkId: string,
+  formData: FormData,
+): Promise<ResponseAction | void> => {
+  try {
+    const { password } = await redirectSchema.parseAsync(formData)
+
+    const findLinkById = await prisma.link.findUnique({
+      where: { id: linkId },
+      include: {
+        util: true,
+      },
+    })
+
+    if (!findLinkById) throw new Error('Link not found.')
+
+    if (!findLinkById?.util?.password) throw new Error('Password not found.')
+
+    const comparedPassword = await verifyPassword(
+      password,
+      findLinkById?.util?.password,
+    )
+
+    if (!comparedPassword) throw new Error('Password is incorrect.')
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return sendError(err.errors[0].message)
+    }
+    if (err instanceof Error) {
+      return sendError(err.message)
+    }
+  }
 }
 
 const registerUser = async (
@@ -204,6 +237,12 @@ const createLink = async (
       return sendError(err.message)
     }
   }
+}
+
+const createClick = async (data: Prisma.ClickUncheckedCreateInput) => {
+  await prisma.click.create({
+    data,
+  })
 }
 
 const getMe = async () => {
@@ -376,9 +415,11 @@ const editDomain = async (
 
 export {
   authorizeUser,
+  authorizeRedirect,
   registerUser,
   createDomain,
   createLink,
+  createClick,
   getMe,
   getLink,
   getAllDomains,

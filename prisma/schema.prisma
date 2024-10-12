@@ -140,13 +140,13 @@ model Util {
 }
 
 model Click {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
   ip           String
-  browser      String
   device       String
-  platform     String
-  country      String
-  redirectedBy String @map("redirected_by")
+  browser      String?
+  platform     String?
+  country      String?
+  redirectedBy String? @map("redirected_by")
 
   createdAt DateTime @default(now()) @map("created_at")
 
