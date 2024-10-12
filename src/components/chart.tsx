@@ -123,9 +123,13 @@ const Chart = ({
   )
   const chartConfig = generateChartConfig(devices)
 
+  const length = link.clicks.length
+
+  const headerTitle = `${length} ${length === 1 ? 'click' : 'clicks'}`
+
   return (
     <React.Fragment>
-      <h3 className="text-2xl font-bold">{link.clicks.length} clicks</h3>
+      <h3 className="text-2xl font-bold">{headerTitle}</h3>
 
       <ChartContainer className="max-h-96 w-full" config={chartConfig}>
         <BarChart accessibilityLayer data={chartData}>
