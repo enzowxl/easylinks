@@ -2,8 +2,9 @@ import { Base } from '@/app/(dashboard)/_components/base/base'
 import { CreateLinkList } from './_components/create-link-list'
 import { getAllDomains } from '@/utils/db'
 import { TitleNavType } from '@/app/(dashboard)/_components/nav/nav-auth'
+import { Metadata } from 'next'
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Create Link',
   }

@@ -6,10 +6,49 @@ import { notFound, redirect } from 'next/navigation'
 import { UAParser } from 'ua-parser-js'
 import { getCountry, getIp } from '@/utils/network'
 import { createClick } from '@/utils/db'
+import { Metadata } from 'next'
 
 export type RedirectLinkType = Prisma.LinkGetPayload<{
-  include: { domain: true; util: true }
+  include: { domain: true; util: true; metaData: true }
 }>
+
+const getLinkBySlugAndHost = async (slug: string, host: string) => {
+  const findDomainByHost = await prisma.domain.findUnique({
+    where: { domainName: host },
+  })
+
+  const linkConditions = findDomainByHost
+    ? { slug, domain: { domainName: findDomainByHost.domainName } }
+    : { slug, domain: null }
+
+  const findLinkByConditions = await prisma.link.findFirst({
+    where: linkConditions,
+    include: {
+      domain: true,
+      util: true,
+      metaData: true,
+    },
+  })
+
+  if (!findLinkByConditions) return notFound()
+
+  return findLinkByConditions
+}
+
+export async function generateMetadata({
+  params: { slug },
+}: {
+  params: { slug: string }
+}): Promise<Metadata> {
+  const host = headers().get('host') as string
+
+  const link = await getLinkBySlugAndHost(slug, host)
+
+  return {
+    title: link.metaData?.title,
+    description: link.metaData?.description,
+  }
+}
 
 const RedirectPage = async ({
   params: { slug },
@@ -23,39 +62,10 @@ const RedirectPage = async ({
   const country = await getCountry()
   const ip = getIp()
 
-  const findDomainByHost = await prisma.domain.findUnique({
-    where: { domainName: host },
-  })
-
-  let findLinkBySlug: RedirectLinkType | null
-
-  if (findDomainByHost && findDomainByHost?.domainName === host) {
-    findLinkBySlug = await prisma.link.findFirst({
-      where: {
-        slug,
-        domain: {
-          domainName: findDomainByHost.domainName,
-        },
-      },
-      include: {
-        domain: true,
-        util: true,
-      },
-    })
-  } else {
-    findLinkBySlug = await prisma.link.findFirst({
-      where: { slug, domain: null },
-      include: {
-        domain: true,
-        util: true,
-      },
-    })
-  }
-
-  if (!findLinkBySlug) return notFound()
+  const link = await getLinkBySlugAndHost(slug, host)
 
   const clickData: Prisma.ClickUncheckedCreateInput = {
-    linkId: findLinkBySlug.id,
+    linkId: link.id,
     ip,
     country,
     browser: browser.name,
@@ -64,11 +74,11 @@ const RedirectPage = async ({
     redirectedBy: referer,
   }
 
-  if (findLinkBySlug?.util?.password) {
+  if (link?.util?.password) {
     return (
       <main className="flex h-screen bg-gradient-to-b from-neutrals-12 to-dark">
         <div className="px-5 flex flex-col gap-5 flex-1 items-center justify-center">
-          <RedirectForm clickData={clickData} link={findLinkBySlug} />
+          <RedirectForm clickData={clickData} link={link} />
         </div>
       </main>
     )
@@ -76,7 +86,7 @@ const RedirectPage = async ({
 
   await createClick(clickData)
 
-  return redirect(findLinkBySlug.url)
+  return redirect(link.url)
 }
 
 export default RedirectPage

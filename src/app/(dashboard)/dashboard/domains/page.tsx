@@ -2,8 +2,9 @@ import { DomainList } from './_components/domain-list'
 import { getAllDomains } from '@/utils/db'
 import { Base } from '../../_components/base/base'
 import { TitleNavType } from '../../_components/nav/nav-auth'
+import { Metadata } from 'next'
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Domains',
   }
