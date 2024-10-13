@@ -13,16 +13,19 @@ enum UserRoles {
 }
 
 model User {
-  id       String    @id @default(auto()) @map("_id") @db.ObjectId
-  email    String    @unique
-  name     String
-  password String
-  photoUrl String?   @map("photo_url")
-  photoId  String?   @map("photo_id")
-  role     UserRoles @default(MEMBER)
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  email            String    @unique
+  name             String
+  password         String
+  role             UserRoles @default(MEMBER)
+  photoUrl         String?   @map("photo_url")
+  photoId          String?   @map("photo_id")
+  stripeCustomerId String?   @map("stripe_customer_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  subscription Subscription?
 
   referral   Referral? @relation("UserReferral", fields: [referralId], references: [id], onDelete: Cascade)
   referralId String?   @unique @db.ObjectId
@@ -34,6 +37,21 @@ model User {
   links   Link[]
 
   @@map("users")
+}
+
+model Subscription {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  subscriptionId String @unique @map("subscription_id")
+  status         String
+  priceId        String @map("price_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String @unique @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
 }
 
 model Referral {

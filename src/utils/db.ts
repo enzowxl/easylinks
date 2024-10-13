@@ -23,9 +23,10 @@ import { getIp } from './network'
 import { sendError } from './error'
 import { isAuthenticated } from './verify'
 
-interface ResponseAction {
+type ResponseAction<T = undefined> = {
   error?: string
-}
+  response?: T
+} | void
 
 const authorizeUser = async (email: string, password: string) => {
   const findUserByEmail = await prisma.user.findUnique({
@@ -49,7 +50,7 @@ const authorizeUser = async (email: string, password: string) => {
 const authorizeRedirect = async (
   linkId: string,
   formData: FormData,
-): Promise<ResponseAction | void> => {
+): Promise<ResponseAction> => {
   try {
     const { password } = await redirectSchema.parseAsync(formData)
 
@@ -77,12 +78,11 @@ const authorizeRedirect = async (
     if (err instanceof Error) {
       return sendError(err.message)
     }
+    return sendError('Bad request.')
   }
 }
 
-const registerUser = async (
-  formData: FormData,
-): Promise<ResponseAction | void> => {
+const registerUser = async (formData: FormData): Promise<ResponseAction> => {
   try {
     const { name, email, password } = await signUpSchema.parseAsync(formData)
 
@@ -120,12 +120,11 @@ const registerUser = async (
     if (err instanceof Error) {
       return sendError(err.message)
     }
+    return sendError('Bad request.')
   }
 }
 
-const createDomain = async (
-  formData: FormData,
-): Promise<ResponseAction | void> => {
+const createDomain = async (formData: FormData): Promise<ResponseAction> => {
   try {
     const { user } = await isAuthenticated()
 
@@ -154,12 +153,11 @@ const createDomain = async (
     if (err instanceof Error) {
       return sendError(err.message)
     }
+    return sendError('Bad request.')
   }
 }
 
-const createLink = async (
-  formData: FormData,
-): Promise<ResponseAction | void> => {
+const createLink = async (formData: FormData): Promise<ResponseAction> => {
   try {
     const { user } = await isAuthenticated()
 
@@ -236,10 +234,13 @@ const createLink = async (
     if (err instanceof Error) {
       return sendError(err.message)
     }
+    return sendError('Bad request.')
   }
 }
 
-const createClick = async (data: Prisma.ClickUncheckedCreateInput) => {
+const createClick = async (
+  data: Prisma.ClickUncheckedCreateInput,
+): Promise<ResponseAction> => {
   await prisma.click.create({
     data,
   })
@@ -316,9 +317,7 @@ const getAllDomains = async () => {
   }
 }
 
-const deleteDomain = async (
-  domainName: string,
-): Promise<ResponseAction | void> => {
+const deleteDomain = async (domainName: string): Promise<ResponseAction> => {
   try {
     await isAuthenticated()
 
@@ -344,10 +343,11 @@ const deleteDomain = async (
     if (err instanceof Error) {
       return sendError(err.message)
     }
+    return sendError('Bad request.')
   }
 }
 
-const deleteLink = async (linkId: string): Promise<ResponseAction | void> => {
+const deleteLink = async (linkId: string): Promise<ResponseAction> => {
   try {
     await isAuthenticated()
 
@@ -371,13 +371,14 @@ const deleteLink = async (linkId: string): Promise<ResponseAction | void> => {
     if (err instanceof Error) {
       return sendError(err.message)
     }
+    return sendError('Bad request.')
   }
 }
 
 const editDomain = async (
   formData: FormData,
   domainName: string,
-): Promise<ResponseAction | void> => {
+): Promise<ResponseAction> => {
   try {
     await isAuthenticated()
 
@@ -410,6 +411,7 @@ const editDomain = async (
     if (err instanceof Error) {
       return sendError(err.message)
     }
+    return sendError('Bad request.')
   }
 }
 
