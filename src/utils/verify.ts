@@ -26,9 +26,9 @@ const isAuthenticated = async ({
 const isPremium = async () => {
   const user = await getMe()
 
-  if (user.subscription?.status === 'active') return true
+  if (user.subscription?.status !== 'active') return false
 
-  return false
+  return { subscription: user.subscription }
 }
 
 export { isAuthenticated, isPremium }
