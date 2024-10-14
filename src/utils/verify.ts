@@ -3,6 +3,7 @@
 import { auth } from '@/auth'
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
+import { getMe } from './db'
 
 interface isAuthenticatedType {
   isNotFound?: boolean
@@ -34,4 +35,12 @@ const isAuthenticated = async ({
   return { user: session.user }
 }
 
-export { isAuthenticated }
+const isPremium = async () => {
+  const user = await getMe()
+
+  if (user.subscription?.status === 'active') return true
+
+  return false
+}
+
+export { isAuthenticated, isPremium }

@@ -1,13 +1,13 @@
 'use client'
 
 import { DropdownMenu } from '@/components/dropdown-menu'
-import { User } from '@prisma/client'
 import { LogOut } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 import Image from 'next/image'
+import { UserSideBarType } from './sidebar'
 
 interface SideBarUserMenuType {
-  user: User
+  user: UserSideBarType
 }
 
 const SideBarUserMenu = ({ user }: SideBarUserMenuType) => {

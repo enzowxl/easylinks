@@ -252,6 +252,9 @@ const getMe = async () => {
 
     const findUserById = await prisma.user.findUnique({
       where: { id: user.sub },
+      include: {
+        subscription: true,
+      },
     })
 
     if (!findUserById) return notFound()

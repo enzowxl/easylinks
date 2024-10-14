@@ -3,9 +3,18 @@ import { SideBarUserMenu } from './sidebar-user-menu'
 import { SideBarPlan } from './sidebar-plan'
 import { SideBarPages } from './sidebar-pages'
 import { getMe } from '@/utils/db'
+import { Prisma } from '@prisma/client'
+import { isPremium } from '@/utils/verify'
+
+export type UserSideBarType = Prisma.UserGetPayload<{
+  include: {
+    subscription: true
+  }
+}>
 
 const SideBar = async () => {
   const user = await getMe()
+  const premium = await isPremium()
 
   return (
     <aside className="max-lg:hidden flex h-screen p-5 bg-neutrals-12 overflow-y-auto">
@@ -18,7 +27,7 @@ const SideBar = async () => {
           </div>
         </div>
 
-        <SideBarPlan />
+        {!premium && <SideBarPlan />}
 
         <SideBarUserMenu user={user} />
       </div>
