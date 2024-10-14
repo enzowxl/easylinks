@@ -9,6 +9,7 @@ export type LinkType = Prisma.LinkGetPayload<{
   include: {
     domain: true
     clicks: true
+    util: true
   }
 }>
 

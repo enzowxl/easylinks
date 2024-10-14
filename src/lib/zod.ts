@@ -82,6 +82,40 @@ const createLinkSchema = formData({
   }).optional(),
 })
 
+const editLinkSchema = formData({
+  destinationUrl: string({ message: 'Destination URL is required' })
+    .url({
+      message: 'Invalid destination URL',
+    })
+    .optional(),
+  destinationSlug: string({ message: 'Destination slug is required' })
+    .refine((value) => createSlug(value))
+    .optional(),
+  domainName: string({ message: 'Domain is required' })
+    .refine((value) => validateDomain(value), {
+      message: 'Invalid domain',
+    })
+    .optional(),
+  destinationTitle: string({
+    message: 'Invalid destination title',
+  }).optional(),
+  destinationDescription: string({
+    message: 'Invalid destination description',
+  }).optional(),
+  metadataPhoto: instanceof_(File, {
+    message: 'Invalid metadata photo ',
+  }).optional(),
+  metadataTitle: string({
+    message: 'Invalid metadata title',
+  }).optional(),
+  metadataDescription: string({
+    message: 'Invalid metadata description',
+  }).optional(),
+  utilsPassword: string({
+    message: 'Invalid utils password',
+  }).optional(),
+})
+
 export {
   signInSchema,
   redirectSchema,
@@ -89,4 +123,5 @@ export {
   createDomainSchema,
   editDomainSchema,
   createLinkSchema,
+  editLinkSchema,
 }

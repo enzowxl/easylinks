@@ -7,6 +7,7 @@ import {
   createDomainSchema,
   createLinkSchema,
   editDomainSchema,
+  editLinkSchema,
   redirectSchema,
   signUpSchema,
 } from '@/lib/zod'
@@ -22,6 +23,7 @@ import { Domain, Link, Prisma } from '@prisma/client'
 import { getIp } from './network'
 import { sendError } from './error'
 import { isAuthenticated } from './verify'
+import { filterFormData } from './form'
 
 type ResponseAction<T = undefined> = {
   error?: string
@@ -154,9 +156,6 @@ const createLink = async (formData: FormData): Promise<ResponseAction> => {
       destinationUrl,
       destinationDescription,
       destinationTitle,
-      metadataDescription,
-      // metadataPhoto,
-      metadataTitle,
       utilsPassword,
       domainName,
     } = await createLinkSchema.parseAsync(formData)
@@ -194,14 +193,6 @@ const createLink = async (formData: FormData): Promise<ResponseAction> => {
         slug: destinationSlug,
         url: destinationUrl,
         ip: getIp(),
-        metaData: {
-          create: {
-            title: metadataTitle,
-            description: metadataDescription,
-            photoId: undefined,
-            photoUrl: undefined,
-          },
-        },
         util: {
           create: {
             password: utilsPassword
@@ -259,7 +250,7 @@ const getLink = async (linkId: string) => {
 
     const findLinkById = await prisma.link.findUnique({
       where: { id: linkId, userId: user.id },
-      include: { domain: true, clicks: true },
+      include: { domain: true, clicks: true, util: true },
     })
 
     if (!findLinkById) return notFound()
@@ -406,6 +397,92 @@ const editDomain = async (
   }
 }
 
+const editLink = async (
+  linkId: string,
+  formData: FormData,
+): Promise<ResponseAction> => {
+  try {
+    const { user } = await isAuthenticated()
+
+    const findLinkById = await prisma.link.findUnique({
+      where: { id: linkId, userId: user.sub },
+    })
+
+    if (!findLinkById) throw new Error('Link not found.')
+
+    const {
+      destinationSlug,
+      destinationUrl,
+      destinationDescription,
+      destinationTitle,
+      utilsPassword,
+      domainName,
+    } = await editLinkSchema.parseAsync(filterFormData(formData))
+
+    let findLinkBySlug: Link | null
+
+    const findDomainByDomainName = await prisma.domain.findUnique({
+      where: { domainName: domainName ?? '', userId: user.id },
+    })
+
+    if (domainName && domainName !== process.env.NEXTAUTH_DOMAIN) {
+      if (!findDomainByDomainName) throw new Error('Domain not found.')
+
+      findLinkBySlug = await prisma.link.findFirst({
+        where: {
+          slug: destinationSlug,
+          domainId: findDomainByDomainName.id,
+        },
+      })
+    } else {
+      findLinkBySlug = await prisma.link.findFirst({
+        where: {
+          slug: destinationSlug,
+          domain: null,
+        },
+      })
+    }
+
+    if (destinationSlug) {
+      if (findLinkBySlug) throw new Error('Slug already exists.')
+    }
+
+    await prisma.link.update({
+      where: {
+        id: linkId,
+      },
+      data: {
+        title: destinationTitle,
+        description: destinationDescription,
+        slug: destinationSlug,
+        url: destinationUrl,
+        ip: getIp(),
+        util: {
+          update: {
+            data: {
+              password: utilsPassword
+                ? await encryptPassword(utilsPassword)
+                : undefined,
+            },
+          },
+        },
+        domainId: findDomainByDomainName?.id,
+        userId: user.sub,
+      },
+    })
+
+    return revalidatePath('/dashboard/links', 'page')
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return sendError(err.errors[0].message)
+    }
+    if (err instanceof Error) {
+      return sendError(err.message)
+    }
+    return sendError('Bad request.')
+  }
+}
+
 export {
   authorizeUser,
   authorizeRedirect,
@@ -420,4 +497,5 @@ export {
   deleteDomain,
   deleteLink,
   editDomain,
+  editLink,
 }

@@ -6,22 +6,29 @@ import { Button } from '@/components/button'
 import { Input } from '@/components/input'
 import { SelectInput } from '@/components/select-input'
 import { Plus } from 'lucide-react'
-import { CreateLinkItem } from './create-link-item'
+import { EditLinkItem } from './edit-link-item'
 import { useState } from 'react'
 import { toast } from '@/utils/toast'
-import { createLink } from '@/utils/db'
-import { DomainsType } from '../../../domains/_components/domain-list'
+import { editLink } from '@/utils/db'
 import { useRouter } from 'next/navigation'
+import { DomainsType } from '@/app/(dashboard)/dashboard/domains/_components/domain-list'
+import { LinkType } from '../../page'
 
-const CreateLinkList = ({ domains }: { domains: DomainsType[] }) => {
+const EditLinkList = ({
+  link,
+  domains,
+}: {
+  link: LinkType
+  domains: DomainsType[]
+}) => {
   const router = useRouter()
 
   const [domainName, updateDomainName] = useState<string>('')
 
-  const createLinkAction = async (formData: FormData) => {
+  const editLinkAction = async (formData: FormData) => {
     formData.append('domainName', domainName)
 
-    const responseAction = await createLink(formData)
+    const responseAction = await editLink(link.id, formData)
 
     if (responseAction?.error) {
       return toast({
@@ -33,7 +40,7 @@ const CreateLinkList = ({ domains }: { domains: DomainsType[] }) => {
 
     toast({
       type: 'success',
-      message: 'Successfully created',
+      message: 'Successfully edited',
       style: 'subdark',
     })
 
@@ -61,24 +68,23 @@ const CreateLinkList = ({ domains }: { domains: DomainsType[] }) => {
   }
 
   return (
-    <BaseContainer action={createLinkAction} isForm>
+    <BaseContainer action={editLinkAction} isForm>
       <div className="max-sm:flex-col sm:items-center flex justify-between gap-5 px-5">
         <h3 className="font-bold text-2xl">Create new link</h3>
 
         <Button
           classnamecontainer="max-sm:w-full"
-          title="Create link"
+          title="Edit link"
           icon={Plus}
         />
       </div>
 
       <BaseContent>
-        <CreateLinkItem
+        <EditLinkItem
           title="Choose your destination"
           description="The destination URL of the link"
         >
           <Input
-            required
             name="destinationUrl"
             type="url"
             classnameinputcontainer="hover:scale-[1.01]"
@@ -87,7 +93,6 @@ const CreateLinkList = ({ domains }: { domains: DomainsType[] }) => {
           />
           <div className="max-lg:flex-col flex gap-5 w-full">
             <SelectInput
-              required
               className="max-sm:flex-col max-sm:gap-3 hover:scale-[1.01] duration-500"
               label="Your easylink"
               input={{
@@ -120,9 +125,9 @@ const CreateLinkList = ({ domains }: { domains: DomainsType[] }) => {
             label="Description"
             placeholder="This is the link to my main channel"
           />
-        </CreateLinkItem>
+        </EditLinkItem>
 
-        <CreateLinkItem title="Utils" description="Some uses of your link">
+        <EditLinkItem title="Utils" description="Some uses of your link">
           <Input
             name="utilsPassword"
             autoComplete="new-password"
@@ -131,10 +136,10 @@ const CreateLinkList = ({ domains }: { domains: DomainsType[] }) => {
             type="password"
             placeholder="**********"
           />
-        </CreateLinkItem>
+        </EditLinkItem>
       </BaseContent>
     </BaseContainer>
   )
 }
 
-export { CreateLinkList }
+export { EditLinkList }

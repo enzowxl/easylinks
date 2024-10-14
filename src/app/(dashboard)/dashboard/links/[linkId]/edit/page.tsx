@@ -1,7 +1,8 @@
 import { Base } from '@/app/(dashboard)/_components/base/base'
 import { TitleNavType } from '@/app/(dashboard)/_components/nav/nav-auth'
-import { getLink } from '@/utils/db'
+import { getAllDomains, getLink } from '@/utils/db'
 import { Metadata } from 'next'
+import { EditLinkList } from './_components/edit-link-list'
 
 export async function generateMetadata({
   params: { linkId },
@@ -21,6 +22,7 @@ const EditPage = async ({
   params: { linkId: string }
 }) => {
   const link = await getLink(linkId)
+  const domains = await getAllDomains()
 
   const title: TitleNavType[] = [
     {
@@ -38,7 +40,11 @@ const EditPage = async ({
     },
   ]
 
-  return <Base title={title}>opa</Base>
+  return (
+    <Base title={title}>
+      <EditLinkList link={link} domains={domains} />
+    </Base>
+  )
 }
 
 export default EditPage

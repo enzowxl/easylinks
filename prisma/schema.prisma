@@ -96,8 +96,6 @@ model Link {
 
   util Util?
 
-  metaData MetaData?
-
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -110,21 +108,6 @@ model Link {
   clicks Click[]
 
   @@map("links")
-}
-
-model MetaData {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  title       String?
-  description String?
-  photoUrl    String? @map("photo_url")
-  photoId     String? @map("photo_id")
-
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  link   Link   @relation(fields: [linkId], references: [id], onDelete: Cascade)
-  linkId String @unique @map("link_id") @db.ObjectId
-
-  @@map("metadatas")
 }
 
 model Util {
