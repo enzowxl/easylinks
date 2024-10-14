@@ -6,10 +6,9 @@ import { notFound, redirect } from 'next/navigation'
 import { UAParser } from 'ua-parser-js'
 import { getCountry, getIp } from '@/utils/network'
 import { createClick } from '@/utils/db'
-import { Metadata } from 'next'
 
 export type RedirectLinkType = Prisma.LinkGetPayload<{
-  include: { domain: true; util: true; metaData: true }
+  include: { domain: true; util: true }
 }>
 
 const getLinkBySlugAndHost = async (slug: string, host: string) => {
@@ -26,28 +25,12 @@ const getLinkBySlugAndHost = async (slug: string, host: string) => {
     include: {
       domain: true,
       util: true,
-      metaData: true,
     },
   })
 
   if (!findLinkByConditions) return notFound()
 
   return findLinkByConditions
-}
-
-export async function generateMetadata({
-  params: { slug },
-}: {
-  params: { slug: string }
-}): Promise<Metadata> {
-  const host = headers().get('host') as string
-
-  const link = await getLinkBySlugAndHost(slug, host)
-
-  return {
-    title: link.metaData?.title,
-    description: link.metaData?.description,
-  }
 }
 
 const RedirectPage = async ({

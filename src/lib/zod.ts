@@ -68,15 +68,6 @@ const createLinkSchema = formData({
   destinationDescription: string({
     message: 'Invalid destination description',
   }).optional(),
-  metadataPhoto: instanceof_(File, {
-    message: 'Invalid metadata photo ',
-  }).optional(),
-  metadataTitle: string({
-    message: 'Invalid metadata title',
-  }).optional(),
-  metadataDescription: string({
-    message: 'Invalid metadata description',
-  }).optional(),
   utilsPassword: string({
     message: 'Invalid utils password',
   }).optional(),
@@ -101,15 +92,6 @@ const editLinkSchema = formData({
   }).optional(),
   destinationDescription: string({
     message: 'Invalid destination description',
-  }).optional(),
-  metadataPhoto: instanceof_(File, {
-    message: 'Invalid metadata photo ',
-  }).optional(),
-  metadataTitle: string({
-    message: 'Invalid metadata title',
-  }).optional(),
-  metadataDescription: string({
-    message: 'Invalid metadata description',
   }).optional(),
   utilsPassword: string({
     message: 'Invalid utils password',
