@@ -1,7 +1,6 @@
 'use server'
 
 import { auth } from '@/auth'
-import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { getMe } from './db'
 
@@ -15,17 +14,6 @@ const isAuthenticated = async ({
   const session = await auth()
 
   if (!session?.user) {
-    if (isNotFound) {
-      return notFound()
-    }
-    throw new Error('Unauthorized.')
-  }
-
-  const findUserById = await prisma.user.findUnique({
-    where: { id: session.user.sub },
-  })
-
-  if (!findUserById) {
     if (isNotFound) {
       return notFound()
     }
