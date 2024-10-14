@@ -3,9 +3,9 @@
 import { Menu } from 'lucide-react'
 import { NavSheetMenu } from './nav-sheet-menu'
 import { useSheetStore } from '@/providers/sheet-provider'
-import { User } from '@prisma/client'
+import { UserSideBarType } from '../sidebar/sidebar'
 
-const NavButtonMenu = ({ user }: { user: User }) => {
+const NavButtonMenu = ({ user }: { user: UserSideBarType }) => {
   const { dispatch } = useSheetStore((state) => state)
 
   return (
