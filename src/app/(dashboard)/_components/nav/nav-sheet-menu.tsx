@@ -2,10 +2,10 @@ import { Sheet } from '@/components/sheet'
 import { SideBarPages } from '../sidebar/sidebar-pages'
 import { SideBarPlan } from '../sidebar/sidebar-plan'
 import { SideBarUserMenu } from '../sidebar/sidebar-user-menu'
-import { User } from '@prisma/client'
+import { UserSideBarType } from '../sidebar/sidebar'
 
 interface NavSheetMenuType {
-  user: User
+  user: UserSideBarType
 }
 
 const NavSheetMenu = ({ user }: NavSheetMenuType) => {
