@@ -94,24 +94,12 @@ const registerUser = async (formData: FormData): Promise<ResponseAction> => {
 
     const hashedPassword = await encryptPassword(password)
 
-    return await prisma.$transaction(async (prismaClient) => {
-      const prismaCreateUser = await prismaClient.user.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-        },
-      })
-
-      await prismaClient.referral.create({
-        data: {
-          user: {
-            connect: {
-              id: prismaCreateUser.id,
-            },
-          },
-        },
-      })
+    await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
     })
   } catch (err) {
     if (err instanceof ZodError) {

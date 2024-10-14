@@ -1,5 +1,3 @@
-'use client'
-
 import clsx from 'clsx'
 import Image from 'next/image'
 
@@ -15,7 +13,7 @@ const Logo = ({ noText, width, height, className }: LogoType) => {
     <div className={clsx('flex items-center gap-1.5 select-none', className)}>
       <Image
         className={`w-[${width || '30'}px] h-[${height || 30}px]`}
-        src={require('@/../public/easylinks.png')}
+        src={'/easylinks.png'}
         alt="logo"
         width={width || 30}
         height={width || 30}

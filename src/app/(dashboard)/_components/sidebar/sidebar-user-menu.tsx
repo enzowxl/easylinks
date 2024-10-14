@@ -35,7 +35,9 @@ const SideBarUserMenu = ({ user }: SideBarUserMenuType) => {
           width={100}
           height={100}
         />
-        <h5>{user?.name}</h5>
+        <h5 className="text-nowrap overflow-hidden w-full text-ellipsis">
+          {user?.name}
+        </h5>
       </div>
     </DropdownMenu>
   )

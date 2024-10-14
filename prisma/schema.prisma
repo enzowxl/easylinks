@@ -27,12 +27,6 @@ model User {
 
   subscription Subscription?
 
-  referral   Referral? @relation("UserReferral", fields: [referralId], references: [id], onDelete: Cascade)
-  referralId String?   @unique @db.ObjectId
-
-  referencedUsers   Referral? @relation(fields: [referencedUsersId], references: [id], onDelete: Cascade)
-  referencedUsersId String?   @unique @db.ObjectId
-
   domains Domain[]
   links   Link[]
 
@@ -48,22 +42,10 @@ model Subscription {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  userId String @unique @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique @db.ObjectId
 
   @@map("subscriptions")
-}
-
-model Referral {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  referId String @default(cuid())
-
-  user User? @relation("UserReferral")
-
-  users User[]
-
-  @@map("referrals")
 }
 
 model Domain {
