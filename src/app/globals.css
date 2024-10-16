@@ -87,7 +87,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-white;
   }
 }
 
@@ -102,8 +102,4 @@ body {
 ::-webkit-scrollbar-thumb {
   background-color: #7C7AFF;
   border-radius: 10px;
-}
-
-text {
-  color: white;
 }
