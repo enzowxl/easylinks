@@ -1,7 +1,7 @@
 'use client'
 
 import { DataItem } from '@/app/(dashboard)/_components/data-item'
-import { Chart } from '@/components/chart'
+import { Chart } from '@/components/chart/chart'
 import { LinkType } from '../page'
 import { Select } from '@/components/select'
 import { BaseContainer } from '@/app/(dashboard)/_components/base/base-container'
@@ -148,8 +148,10 @@ const LinkData = ({ link }: { link: LinkType }) => {
 
       <BaseContent className="!grid">
         <Chart
+          type="devices"
+          countClickInHeader
           link={link}
-          linkFiltered={{ ...link, clicks: filteredClicks }}
+          clicksFiltered={filteredClicks}
           dateType={dateType}
         />
         <div className="max-lg:grid-cols-1 gap-5 grid grid-cols-2">

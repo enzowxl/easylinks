@@ -8,12 +8,17 @@ const countOccurrences = (clicks: { [key: string]: string | undefined }[]) => {
     platform: {},
     country: {},
     redirectedBy: {},
+    bestLinks: {},
   }
 
   clicks.forEach((click) => {
     for (const key in counts) {
       const value = click[key] || 'Unknown'
       counts[key][value] = (counts[key][value] || 0) + 1
+    }
+
+    if (click.linkId) {
+      counts.bestLinks[click.linkId] = (counts.bestLinks[click.linkId] || 0) + 1
     }
   })
 

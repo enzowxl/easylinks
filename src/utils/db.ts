@@ -270,6 +270,7 @@ const getAllLinks = async () => {
       include: {
         domain: true,
         clicks: true,
+        util: true,
       },
     })
 

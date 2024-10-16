@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import { Base } from '../_components/base/base'
 import { TitleNavType } from '../_components/nav/nav-auth'
+import { getAllLinks, getMe } from '@/utils/db'
+import { DashboardData } from './_components/dashboard-data'
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -8,7 +10,10 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
+  const links = await getAllLinks()
+  const user = await getMe()
+
   const title: TitleNavType[] = [
     {
       label: 'Dashboard',
@@ -16,7 +21,11 @@ const DashboardPage = () => {
     },
   ]
 
-  return <Base title={title}>opa</Base>
+  return (
+    <Base title={title}>
+      <DashboardData user={user} links={links} />
+    </Base>
+  )
 }
 
 export default DashboardPage
