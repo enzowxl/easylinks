@@ -32,7 +32,7 @@ const DashboardData = ({ links, user }: { links: LinkType[]; user: User }) => {
       const domainName =
         link.domain?.domainName ?? process.env.NEXT_PUBLIC_DOMAIN
 
-      map[link.id] = domainName + link.slug
+      map[link.id] = domainName + '/' + link.slug
       return map
     },
     {} as Record<string, string>,
