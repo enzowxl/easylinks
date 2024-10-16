@@ -22,7 +22,7 @@ const DashboardData = ({ links, user }: { links: LinkType[]; user: User }) => {
   const { country: countryCounts, bestLinks: bestLinksCounts } =
     countOccurrences(
       allClicks.map((click) => ({
-        linkId: click.linkId || 'Unknown',
+        bestLinks: click.linkId || 'Unknown',
         country: click.country || 'Unknown',
       })),
     )
