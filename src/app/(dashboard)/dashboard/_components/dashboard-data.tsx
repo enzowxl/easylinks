@@ -107,7 +107,9 @@ const DashboardData = ({ links, user }: { links: LinkType[]; user: User }) => {
         />
       </div>
 
-      <BaseContent className="!grid">
+      <BaseContent
+      // className="!grid"
+      >
         <Chart
           type="slugs"
           clicksFiltered={filteredClicks}
