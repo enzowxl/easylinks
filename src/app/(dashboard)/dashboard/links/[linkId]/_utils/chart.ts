@@ -12,7 +12,6 @@ const countOccurrences = (clicks: { [key: string]: string | undefined }[]) => {
   }
 
   clicks.forEach((click) => {
-    console.log(click)
     for (const key in counts) {
       const value = click[key] || 'Unknown'
       counts[key][value] = (counts[key][value] || 0) + 1
