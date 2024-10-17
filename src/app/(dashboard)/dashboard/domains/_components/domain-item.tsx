@@ -6,8 +6,15 @@ import { DropdownMenu } from '@/components/dropdown-menu'
 import { ModalDeleteDomain } from './modal-delete-domain'
 import { useModalStore } from '@/providers/modal-provider'
 import { ModalEditDomain } from './modal-edit-domain'
+import { isPremiumType } from '@/utils/verify'
 
-const DomainItem = ({ domain }: { domain: DomainsType }) => {
+const DomainItem = ({
+  domain,
+  premium,
+}: {
+  domain: DomainsType
+  premium: isPremiumType
+}) => {
   const { dispatch } = useModalStore((state) => state)
 
   const Icon = domain.misconfigured ? X : Check
@@ -55,9 +62,16 @@ const DomainItem = ({ domain }: { domain: DomainsType }) => {
         )}
       >
         <div className="flex flex-col gap-1.5">
-          <h2 className="max-sm:text-base font-bold text-lg">
-            {domain.domainName}
-          </h2>
+          <div className="flex gap-2 items-center">
+            <h2 className="max-sm:text-base font-bold text-lg">
+              {domain.domainName}
+            </h2>
+            {!premium && (
+              <p className="max-sm:text-xs text-sm text-neutrals-6">
+                (Disabled)
+              </p>
+            )}
+          </div>
           <div className="max-[320px]:flex-col flex items-center gap-2.5">
             <Icon
               className={clsx(

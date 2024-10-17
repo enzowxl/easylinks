@@ -3,6 +3,7 @@ import { getAllDomains } from '@/utils/db'
 import { Base } from '../../_components/base/base'
 import { TitleNavType } from '../../_components/nav/nav-auth'
 import { Metadata } from 'next'
+import { isPremium } from '@/utils/verify'
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -12,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const DomainsPage = async () => {
   const domains = await getAllDomains()
+  const premium = await isPremium()
 
   const title: TitleNavType[] = [
     {
@@ -22,7 +24,7 @@ const DomainsPage = async () => {
 
   return (
     <Base title={title}>
-      <DomainList domains={domains} />
+      <DomainList premium={premium} domains={domains} />
     </Base>
   )
 }

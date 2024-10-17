@@ -1,5 +1,6 @@
 'use client'
 
+import { StarFilledIcon } from '@radix-ui/react-icons'
 import clsx from 'clsx'
 import { LucideProps } from 'lucide-react'
 import Link from 'next/link'
@@ -17,13 +18,14 @@ interface ButtonType {
   href?: string
   classnamecontainer?: string
   variant?: keyof typeof variants
+  premium?: boolean
 }
 
 const Button = (
   props: React.ButtonHTMLAttributes<HTMLButtonElement> & ButtonType,
 ) => {
   const className = clsx(
-    'hover:scale-105 max-sm:text-sm flex justify-center items-center gap-2.5 duration-500 border border-purple-primary-500 cursor-pointer px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-purplePrimary to-purple-primary-800',
+    'hover:scale-105 relative max-sm:text-sm flex justify-center items-center gap-2.5 duration-500 border border-purple-primary-500 cursor-pointer px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-purplePrimary to-purple-primary-800',
     props.classnamecontainer,
     props.disabled
       ? '!cursor-not-allowed !border !border-neutrals-11 !text-neutrals-7 !from-neutrals-12 !to-neutrals-13 hover:!scale-100'
@@ -35,15 +37,21 @@ const Button = (
     <props.icon className="max-sm:w-4 max-sm:h-4 min-w-5 min-h-5 max-w-5 max-h-5" />
   )
 
+  const premium = props.premium && (
+    <StarFilledIcon className="max-sm:w-4 max-sm:h-4 min-w-5 min-h-5 max-w-5 max-h-5 absolute -right-2 -top-2" />
+  )
+
   return (
     <React.Fragment>
       {props.href && !props.disabled ? (
         <Link href={props.href} className={className}>
+          {premium}
           {icon}
           {props.title}
         </Link>
       ) : (
         <button className={className} {...props}>
+          {premium}
           {icon}
           {props.title}
         </button>

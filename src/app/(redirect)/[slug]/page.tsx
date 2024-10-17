@@ -5,7 +5,7 @@ import { RedirectForm } from '../_components/redirect-form'
 import { notFound, redirect } from 'next/navigation'
 import { UAParser } from 'ua-parser-js'
 import { getCountry, getIp } from '@/utils/network'
-import { createClick } from '@/utils/db'
+import { createClick, getUser } from '@/utils/db'
 
 export type RedirectLinkType = Prisma.LinkGetPayload<{
   include: { domain: true; util: true }
@@ -29,6 +29,12 @@ const getLinkBySlugAndHost = async (slug: string, host: string) => {
   })
 
   if (!findLinkByConditions) return notFound()
+
+  if (findLinkByConditions.domain?.domainName) {
+    const ownerDomain = await getUser(findLinkByConditions.userId)
+
+    if (ownerDomain.subscription?.status !== 'active') return notFound()
+  }
 
   return findLinkByConditions
 }

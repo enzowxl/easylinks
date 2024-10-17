@@ -10,10 +10,17 @@ import { ModalCreateDomain } from './modal-create-domain'
 import { useModalStore } from '@/providers/modal-provider'
 import { BaseContainer } from '@/app/(dashboard)/_components/base/base-container'
 import { BaseContent } from '@/app/(dashboard)/_components/base/base-content'
+import { isPremiumType } from '@/utils/verify'
 
 export type DomainsType = Domain & { misconfigured?: boolean }
 
-const DomainList = ({ domains }: { domains: DomainsType[] }) => {
+const DomainList = ({
+  domains,
+  premium,
+}: {
+  domains: DomainsType[]
+  premium: isPremiumType
+}) => {
   const { dispatch } = useModalStore((state) => state)
 
   const [search, updateSearch] = useState<string>('')
@@ -45,6 +52,8 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
             classnamecontainer="max-sm:w-full"
             title="Create domain"
             icon={Plus}
+            premium={!premium}
+            disabled={!premium}
           />
         </div>
       </div>
@@ -58,11 +67,11 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
           </div>
         ) : search.length > 0 ? (
           filter.map((domain, index) => {
-            return <DomainItem key={index} domain={domain} />
+            return <DomainItem key={index} premium={premium} domain={domain} />
           })
         ) : (
           domains.map((domain, index) => {
-            return <DomainItem key={index} domain={domain} />
+            return <DomainItem key={index} premium={premium} domain={domain} />
           })
         )}
       </BaseContent>

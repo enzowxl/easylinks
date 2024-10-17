@@ -22,7 +22,7 @@ import { notFound } from 'next/navigation'
 import { Domain, Link, Prisma } from '@prisma/client'
 import { getIp } from './network'
 import { sendError } from './error'
-import { isAuthenticated } from './verify'
+import { isAuthenticated, isPremium } from './verify'
 import { filterFormData } from './form'
 
 type ResponseAction<T = undefined> = {
@@ -117,6 +117,10 @@ const registerUser = async (formData: FormData): Promise<ResponseAction> => {
 const createDomain = async (formData: FormData): Promise<ResponseAction> => {
   try {
     const { user } = await isAuthenticated()
+
+    const premium = await isPremium()
+
+    if (!premium) throw new Error('User is not premium.')
 
     const { domainName } = await createDomainSchema.parseAsync(formData)
 
@@ -231,6 +235,23 @@ const getMe = async () => {
 
     const findUserById = await prisma.user.findUnique({
       where: { id: user.sub },
+      include: {
+        subscription: true,
+      },
+    })
+
+    if (!findUserById) return notFound()
+
+    return findUserById
+  } catch (err) {
+    return notFound()
+  }
+}
+
+const getUser = async (userId: string) => {
+  try {
+    const findUserById = await prisma.user.findUnique({
+      where: { id: userId },
       include: {
         subscription: true,
       },
@@ -365,6 +386,10 @@ const editDomain = async (
   try {
     await isAuthenticated()
 
+    const premium = await isPremium()
+
+    if (!premium) throw new Error('User is not premium.')
+
     const { newDomainName } = await editDomainSchema.parseAsync(formData)
 
     const findDomainByNewDomainName = await prisma.domain.findUnique({
@@ -492,6 +517,7 @@ export {
   createLink,
   createClick,
   getMe,
+  getUser,
   getLink,
   getAllDomains,
   getAllLinks,

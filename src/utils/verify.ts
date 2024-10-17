@@ -3,10 +3,17 @@
 import { auth } from '@/auth'
 import { notFound } from 'next/navigation'
 import { getMe } from './db'
+import { Subscription } from '@prisma/client'
 
 interface isAuthenticatedType {
   isNotFound?: boolean
 }
+
+export type isPremiumType =
+  | {
+      subscription: Subscription
+    }
+  | false
 
 const isAuthenticated = async ({
   isNotFound = false,
@@ -23,7 +30,7 @@ const isAuthenticated = async ({
   return { user: session.user }
 }
 
-const isPremium = async () => {
+const isPremium = async (): Promise<isPremiumType> => {
   const user = await getMe()
 
   if (user.subscription?.status !== 'active') return false
