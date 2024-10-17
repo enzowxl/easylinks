@@ -53,7 +53,7 @@ const Chart = ({
   return (
     <React.Fragment>
       {countClickInHeader && link && (
-        <h3 className="text-2xl font-bold">{headerTitle}</h3>
+        <h3 className="max-sm:text-xl text-2xl font-bold">{headerTitle}</h3>
       )}
 
       <ChartContainer className="max-h-96 w-full" config={chartConfig}>

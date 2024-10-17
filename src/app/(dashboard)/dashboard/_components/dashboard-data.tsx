@@ -94,7 +94,7 @@ const DashboardData = ({ links, user }: { links: LinkType[]; user: User }) => {
     <BaseContainer>
       <div className="max-sm:flex-col sm:items-center flex justify-between gap-5 px-5">
         <div>
-          <h3 className="text-nowrap font-bold text-2xl text-neutrals-6 flex overflow-hidden text-ellipsis">
+          <h3 className="max-sm:text-xl text-nowrap font-bold text-2xl text-neutrals-6 flex overflow-hidden text-ellipsis">
             Welcome, {firstName}
           </h3>
         </div>

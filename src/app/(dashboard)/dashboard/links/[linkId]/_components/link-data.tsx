@@ -129,13 +129,13 @@ const LinkData = ({ link }: { link: LinkType }) => {
     <BaseContainer>
       <div className="max-sm:flex-col sm:items-center flex justify-between gap-5 px-5">
         <div>
-          <h3 className="text-nowrap font-bold text-2xl text-neutrals-6 flex overflow-hidden text-ellipsis">
+          <h3 className="max-sm:text-xl text-nowrap font-bold text-2xl text-neutrals-6 flex overflow-hidden text-ellipsis">
             {`${domainName}/`}
             <p className="text-white overflow-hidden text-ellipsis">
               {link.slug}
             </p>
           </h3>
-          <h5 className="text-neutrals-6">{link.description}</h5>
+          <h5 className="max-sm:text-sm text-neutrals-6">{link.description}</h5>
         </div>
 
         <Select

@@ -54,8 +54,8 @@ const Select = ({
           className,
         )}
       >
-        <div className="flex items-center gap-2.5 text-base">
-          {Icon && <Icon className={clsx('w-5 h-5')} />}
+        <div className="max-sm:text-sm flex items-center gap-2.5 text-base">
+          {Icon && <Icon className={clsx('max-sm:w-4 max-sm:h-4 w-5 h-5')} />}
           <SelectValue placeholder={placeholder} />
         </div>
       </SelectTrigger>

@@ -35,7 +35,7 @@ const SideBarUserMenu = ({ user }: SideBarUserMenuType) => {
           width={100}
           height={100}
         />
-        <h5 className="text-nowrap overflow-hidden w-full text-ellipsis">
+        <h5 className="max-sm:text-sm text-nowrap overflow-hidden w-full text-ellipsis">
           {user?.name}
         </h5>
       </div>

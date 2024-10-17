@@ -65,7 +65,7 @@ const LinkItem = ({ link }: { link: LinksType }) => {
         <div className="max-sm:justify-center flex items-center gap-3">
           <Link
             href={dashboardLinkUrl}
-            className="hover:underline font-bold text-lg overflow-hidden text-ellipsis"
+            className="max-sm:text-base hover:underline font-bold text-lg overflow-hidden text-ellipsis"
           >
             {link.title ? link.title : link.slug}
           </Link>
@@ -84,7 +84,7 @@ const LinkItem = ({ link }: { link: LinksType }) => {
         </div>
         <Link
           href={redirectUrl}
-          className="max-sm:justify-center overflow-hidden text-ellipsis hover:underline flex text-neutrals-6"
+          className="max-sm:justify-center max-sm:text-sm overflow-hidden text-ellipsis hover:underline flex text-neutrals-6"
         >
           {`${domainName}/`}
           <p className="overflow-hidden text-nowrap text-ellipsis text-white inline-block">
@@ -93,7 +93,7 @@ const LinkItem = ({ link }: { link: LinksType }) => {
         </Link>
         <Link
           href={externalWebsiteUrl}
-          className="hover:underline text-neutrals-6 overflow-hidden text-ellipsis"
+          className="max-sm:text-sm hover:underline text-neutrals-6 overflow-hidden text-ellipsis"
         >
           {externalWebsiteUrl}
         </Link>

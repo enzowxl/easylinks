@@ -24,8 +24,10 @@ const SideBarPlan = () => {
 
   return (
     <div className="flex flex-col items-center gap-3.5 bg-neutrals-11 rounded-lg px-3 py-5 text-center">
-      <h4 className="text-lg font-medium">Optimize Your Experience</h4>
-      <p className="text-neutrals-6">
+      <h4 className="max-sm:text-base text-lg font-medium">
+        Optimize Your Experience
+      </h4>
+      <p className="max-sm:text-sm text-neutrals-6">
         Improve your experience by improving your plan
       </p>
       <Button onClick={createSubscriptionAction} title="Upgrade" />

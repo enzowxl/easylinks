@@ -70,7 +70,7 @@ const EditLinkList = ({
   return (
     <BaseContainer action={editLinkAction} isForm>
       <div className="max-sm:flex-col sm:items-center flex justify-between gap-5 px-5">
-        <h3 className="font-bold text-2xl">Create new link</h3>
+        <h3 className="max-sm:text-xl font-bold text-2xl">Create new link</h3>
 
         <Button
           classnamecontainer="max-sm:w-full"

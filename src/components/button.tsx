@@ -23,7 +23,7 @@ const Button = (
   props: React.ButtonHTMLAttributes<HTMLButtonElement> & ButtonType,
 ) => {
   const className = clsx(
-    'hover:scale-105 flex justify-center items-center gap-2.5 duration-500 border border-purple-primary-500 cursor-pointer px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-purplePrimary to-purple-primary-800',
+    'hover:scale-105 max-sm:text-sm flex justify-center items-center gap-2.5 duration-500 border border-purple-primary-500 cursor-pointer px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-purplePrimary to-purple-primary-800',
     props.classnamecontainer,
     props.disabled
       ? '!cursor-not-allowed !border !border-neutrals-11 !text-neutrals-7 !from-neutrals-12 !to-neutrals-13 hover:!scale-100'
@@ -32,7 +32,7 @@ const Button = (
   )
 
   const icon = props.icon && (
-    <props.icon className="min-w-5 min-h-5 max-w-5 max-h-5" />
+    <props.icon className="max-sm:w-4 max-sm:h-4 min-w-5 min-h-5 max-w-5 max-h-5" />
   )
 
   return (

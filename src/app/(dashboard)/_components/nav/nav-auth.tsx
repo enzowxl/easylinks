@@ -29,13 +29,13 @@ const NavAuth = async ({ title }: NavAuthType) => {
                 className={clsx(containsId ? 'overflow-hidden' : '')}
                 href={titleItem.href}
               >
-                <h4 className="font-bold text-lg overflow-hidden text-ellipsis">
+                <h4 className="max-sm:text-base font-bold text-lg overflow-hidden text-ellipsis">
                   {titleItem.label}
                 </h4>
               </Link>
 
               {index < title.length - 1 && (
-                <h4 className="font-bold text-lg">/</h4>
+                <h4 className="max-sm:text-base font-bold text-lg">/</h4>
               )}
             </React.Fragment>
           )

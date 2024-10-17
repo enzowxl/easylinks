@@ -32,7 +32,7 @@ const DomainList = ({ domains }: { domains: DomainsType[] }) => {
   return (
     <BaseContainer>
       <div className="flex flex-col gap-5 px-5">
-        <h3 className="font-bold text-2xl">{headerTitle}</h3>
+        <h3 className="max-sm:text-xl font-bold text-2xl">{headerTitle}</h3>
         <div className="max-sm:flex-col flex gap-5 justify-between items-center">
           <Input
             classnamecontainer="max-sm:w-full"

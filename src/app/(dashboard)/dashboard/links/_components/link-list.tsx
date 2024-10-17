@@ -33,7 +33,7 @@ const LinkList = ({ links }: { links: LinksType[] }) => {
   return (
     <BaseContainer>
       <div className="flex flex-col gap-5 px-5">
-        <h3 className="font-bold text-2xl">{headerTitle}</h3>
+        <h3 className="max-sm:text-xl font-bold text-2xl">{headerTitle}</h3>
 
         <div className="max-sm:flex-col flex gap-5 justify-between items-center">
           <Input
@@ -54,7 +54,7 @@ const LinkList = ({ links }: { links: LinksType[] }) => {
       <BaseContent>
         {length <= 0 ? (
           <div className="flex-1 flex items-center justify-center">
-            <h3 className="text-neutrals-6  font-bold text-center">
+            <h3 className="max-sm:text-sm text-neutrals-6  font-bold text-center">
               No link found
             </h3>
           </div>

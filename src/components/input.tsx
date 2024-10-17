@@ -23,9 +23,9 @@ const Input = (
     <div className={clsx('flex flex-col gap-2.5', props.classnamecontainer)}>
       {props.label && (
         <div className="flex gap-2 items-center">
-          <h5>{props.label}</h5>
+          <h5 className="max-sm:text-sm">{props.label}</h5>
           {!props.required && (
-            <p className="text-sm text-neutrals-6">(Optional)</p>
+            <p className="max-sm:text-xs text-sm text-neutrals-6">(Optional)</p>
           )}
         </div>
       )}
@@ -40,14 +40,14 @@ const Input = (
         {props.icon && (
           <props.icon
             className={clsx(
-              'w-5 h-5 text-neutrals-6',
+              'max-sm:w-4 max-sm:h-4 w-5 h-5 text-neutrals-6',
               props.disabled ? '!text-neutrals-7' : '',
             )}
           />
         )}
         <input
           className={clsx(
-            'w-full bg-transparent outline-none flex-1 placeholder:text-neutrals-6',
+            'max-sm:text-sm w-full bg-transparent outline-none flex-1 placeholder:text-neutrals-6',
             props.disabled
               ? '!cursor-not-allowed placeholder:!text-neutrals-7 '
               : '',

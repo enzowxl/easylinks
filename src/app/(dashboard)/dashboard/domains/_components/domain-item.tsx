@@ -55,15 +55,19 @@ const DomainItem = ({ domain }: { domain: DomainsType }) => {
         )}
       >
         <div className="flex flex-col gap-1.5">
-          <h2 className="font-bold text-lg">{domain.domainName}</h2>
+          <h2 className="max-sm:text-base font-bold text-lg">
+            {domain.domainName}
+          </h2>
           <div className="max-[320px]:flex-col flex items-center gap-2.5">
             <Icon
               className={clsx(
-                'w-5 h-5 p-0.5 rounded-full',
+                'max-[320px]:hidden w-5 h-5 p-0.5 rounded-full',
                 domain.misconfigured ? 'bg-red-500' : 'bg-purplePrimary',
               )}
             />
-            <h5>{domain.misconfigured ? 'Invalid' : 'Valid'} Configuration</h5>
+            <h5 className="max-sm:text-sm">
+              {domain.misconfigured ? 'Invalid' : 'Valid'} Configuration
+            </h5>
           </div>
         </div>
         <DropdownMenu groups={dropDownMenuGroups}>
