@@ -8,12 +8,12 @@ const SignUpPage = async () => {
       <Link href={'/'}>
         <Logo width={50} height={50} noText />
       </Link>
-      <h3 className="text-2xl font-bold text-center">
+      <h3 className="max-sm:text-xl text-2xl font-bold text-center">
         Create your easy
         <p className="text-purplePrimary inline-block">links.</p>
       </h3>
       <SignUpForm />
-      <h5 className="text-center">
+      <h5 className="max-sm:text-sm text-center">
         Do you already have an account?{' '}
         <Link href={'/sign-in'} className="text-purplePrimary">
           Sign In

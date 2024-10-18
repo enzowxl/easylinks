@@ -8,11 +8,17 @@ const SignInPage = async () => {
       <Link href={'/'}>
         <Logo width={50} height={50} noText />
       </Link>
-      <h3 className="text-2xl font-bold text-center">
+      <h3 className="max-sm:text-xl text-2xl font-bold text-center">
         Login to easy<p className="text-purplePrimary inline-block">links.</p>
       </h3>
       <SignInForm />
-      <h5 className="text-center">
+      <h5 className="max-sm:text-sm text-center">
+        Forgot your password?{' '}
+        <Link href={'/recover-password'} className="text-purplePrimary">
+          Recover
+        </Link>
+      </h5>
+      <h5 className="max-sm:text-sm text-center">
         Don&apos;t have an account?{' '}
         <Link href={'/sign-up'} className="text-purplePrimary">
           Sign Up

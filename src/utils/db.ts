@@ -8,8 +8,11 @@ import {
   createLinkSchema,
   editDomainSchema,
   editLinkSchema,
+  tokenVerificationSchema,
   redirectSchema,
   signUpSchema,
+  changePasswordSchema,
+  recoverPasswordSchema,
 } from '@/lib/zod'
 import {
   createDomainInVercel,
@@ -24,6 +27,8 @@ import { getIp } from './network'
 import { sendError } from './error'
 import { isAuthenticated, isPremium } from './verify'
 import { filterFormData } from './form'
+import { sendMail } from './mail'
+import { recoverPasswordTemplate, verificationMailTemplate } from './template'
 
 type ResponseAction<T = undefined> = {
   error?: string
@@ -45,6 +50,9 @@ const authorizeUser = async (email: string, password: string) => {
 
   if (!comparedPassword)
     throw new InvalidLoginError('Email or password is incorrect.')
+
+  if (!findUserByEmail.verifiedEmail)
+    throw new InvalidLoginError('Email has not been verified.')
 
   return findUserByEmail
 }
@@ -84,6 +92,128 @@ const authorizeRedirect = async (
   }
 }
 
+const authorizeToken = async (tokenId: string) => {
+  try {
+    const id = await tokenVerificationSchema.parseAsync(tokenId)
+
+    const findTokenById = await prisma.token.findUnique({
+      where: { id },
+    })
+
+    if (!findTokenById) return notFound()
+
+    switch (findTokenById.type) {
+      case 'VERIFIED_EMAIL':
+        await prisma.user.update({
+          where: { id: findTokenById.userId },
+          data: { verifiedEmail: true },
+        })
+
+        await prisma.token.delete({
+          where: { id },
+        })
+        break
+    }
+
+    return findTokenById
+  } catch (err) {
+    console.log(err)
+    return notFound()
+  }
+}
+
+const recoverPassword = async (formData: FormData) => {
+  try {
+    const { email } = await recoverPasswordSchema.parseAsync(formData)
+
+    const findUserByEmail = await prisma.user.findUnique({
+      where: { email },
+    })
+
+    if (findUserByEmail) {
+      const createToken = await prisma.token.create({
+        data: {
+          userId: findUserByEmail.id,
+          type: 'RECOVER_PASSWORD',
+        },
+      })
+
+      sendMail({
+        sendTo: email,
+        subject: 'Recover Password',
+        html: await recoverPasswordTemplate(
+          findUserByEmail.name,
+          createToken.id,
+        ),
+      })
+    }
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return sendError(err.errors[0].message)
+    }
+    if (err instanceof Error) {
+      return sendError(err.message)
+    }
+    return sendError('Bad request.')
+  }
+}
+
+const changePassword = async (
+  userId: string,
+  formData: FormData,
+  tokenRecover?: string,
+) => {
+  try {
+    const { currentPassword, password } =
+      await changePasswordSchema.parseAsync(formData)
+
+    const findUserById = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    })
+
+    if (!findUserById) throw new Error('User not found.')
+
+    const comparedPassword = await verifyPassword(
+      currentPassword,
+      findUserById.password,
+    )
+
+    if (!comparedPassword) throw new Error('Password is incorrect.')
+
+    const comparedNewPassword = await verifyPassword(
+      password,
+      findUserById.password,
+    )
+
+    if (comparedNewPassword) throw new Error('Passwords are the same.')
+
+    const hashedPassword = await encryptPassword(password)
+
+    await prisma.user.update({
+      where: { id: findUserById?.id },
+      data: {
+        password: hashedPassword,
+      },
+    })
+
+    if (tokenRecover) {
+      await prisma.token.delete({
+        where: { id: tokenRecover },
+      })
+    }
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return sendError(err.errors[0].message)
+    }
+    if (err instanceof Error) {
+      return sendError(err.message)
+    }
+    return sendError('Bad request.')
+  }
+}
+
 const registerUser = async (formData: FormData): Promise<ResponseAction> => {
   try {
     const { name, email, password } = await signUpSchema.parseAsync(formData)
@@ -96,12 +226,27 @@ const registerUser = async (formData: FormData): Promise<ResponseAction> => {
 
     const hashedPassword = await encryptPassword(password)
 
-    await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-      },
+    await prisma.$transaction(async (client) => {
+      const createUser = await client.user.create({
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+        },
+      })
+
+      const createToken = await client.token.create({
+        data: {
+          userId: createUser.id,
+          type: 'VERIFIED_EMAIL',
+        },
+      })
+
+      sendMail({
+        sendTo: email,
+        subject: 'Email Verification',
+        html: await verificationMailTemplate(name, createToken.id),
+      })
     })
   } catch (err) {
     if (err instanceof ZodError) {
@@ -190,6 +335,10 @@ const createLink = async (formData: FormData): Promise<ResponseAction> => {
 
     if (findLinkBySlug) throw new Error('Slug already exists.')
 
+    const hashedPassword = utilsPassword
+      ? await encryptPassword(utilsPassword)
+      : undefined
+
     await prisma.link.create({
       data: {
         title: destinationTitle,
@@ -199,9 +348,7 @@ const createLink = async (formData: FormData): Promise<ResponseAction> => {
         ip: getIp(),
         util: {
           create: {
-            password: utilsPassword
-              ? await encryptPassword(utilsPassword)
-              : undefined,
+            password: hashedPassword,
           },
         },
         domainId: findDomainByDomainName?.id,
@@ -512,6 +659,9 @@ const editLink = async (
 export {
   authorizeUser,
   authorizeRedirect,
+  authorizeToken,
+  recoverPassword,
+  changePassword,
   registerUser,
   createDomain,
   createLink,

@@ -12,9 +12,15 @@ enum UserRoles {
   MEMBER
 }
 
+enum TokenTypes {
+  VERIFIED_EMAIL
+  RECOVER_PASSWORD
+}
+
 model User {
   id               String    @id @default(auto()) @map("_id") @db.ObjectId
   email            String    @unique
+  verifiedEmail    Boolean   @default(false) @map("verified_email")
   name             String
   password         String
   role             UserRoles @default(MEMBER)
@@ -29,8 +35,21 @@ model User {
 
   domains Domain[]
   links   Link[]
+  tokens  Token[]
 
   @@map("users")
+}
+
+model Token {
+  id   String     @id @default(auto()) @map("_id") @db.ObjectId
+  type TokenTypes
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id") @db.ObjectId
+
+  @@map("tokens")
 }
 
 model Subscription {
