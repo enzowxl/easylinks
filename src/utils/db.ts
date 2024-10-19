@@ -132,6 +132,13 @@ const recoverPassword = async (formData: FormData) => {
     })
 
     if (findUserByEmail) {
+      await prisma.token.deleteMany({
+        where: {
+          userId: findUserByEmail.id,
+          type: 'RECOVER_PASSWORD',
+        },
+      })
+
       const createToken = await prisma.token.create({
         data: {
           userId: findUserByEmail.id,
@@ -171,6 +178,13 @@ const verifyEmail = async (formData: FormData) => {
 
     if (findUserByEmail.verifiedEmail)
       throw new Error('Email already verified.')
+
+    await prisma.token.deleteMany({
+      where: {
+        userId: findUserByEmail.id,
+        type: 'VERIFIED_EMAIL',
+      },
+    })
 
     const createToken = await prisma.token.create({
       data: {
@@ -257,6 +271,13 @@ const registerUser = async (formData: FormData): Promise<ResponseAction> => {
           name,
           email,
           password: hashedPassword,
+        },
+      })
+
+      await prisma.token.deleteMany({
+        where: {
+          userId: createUser.id,
+          type: 'VERIFIED_EMAIL',
         },
       })
 
