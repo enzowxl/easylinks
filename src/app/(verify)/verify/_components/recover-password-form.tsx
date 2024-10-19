@@ -45,15 +45,6 @@ const RecoverPasswordForm = ({ token }: { token: Token }) => {
       <Input
         required
         type="password"
-        name="currentPassword"
-        label="Current Password"
-        placeholder="**********"
-        variant="big"
-        icon={Lock}
-      />
-      <Input
-        required
-        type="password"
         name="password"
         label="Password"
         placeholder="**********"

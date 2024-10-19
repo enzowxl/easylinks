@@ -23,7 +23,8 @@ const SignUpForm = () => {
 
     toast({
       type: 'success',
-      message: 'Successfully registered',
+      message:
+        'Successfully registered, a verification link has been sent to your email',
       style: 'dark',
     })
 

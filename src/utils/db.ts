@@ -2,7 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { encryptPassword, verifyPassword } from './password'
-import { InvalidLoginError } from '@/auth'
+import { InvalidLoginError, UnverifiedEmailError } from '@/auth'
 import {
   createDomainSchema,
   createLinkSchema,
@@ -13,6 +13,7 @@ import {
   signUpSchema,
   changePasswordSchema,
   recoverPasswordSchema,
+  verifyEmailSchema,
 } from '@/lib/zod'
 import {
   createDomainInVercel,
@@ -52,7 +53,7 @@ const authorizeUser = async (email: string, password: string) => {
     throw new InvalidLoginError('Email or password is incorrect.')
 
   if (!findUserByEmail.verifiedEmail)
-    throw new InvalidLoginError('Email has not been verified.')
+    throw new UnverifiedEmailError('Email has not been verified.')
 
   return findUserByEmail
 }
@@ -158,14 +159,52 @@ const recoverPassword = async (formData: FormData) => {
   }
 }
 
+const verifyEmail = async (formData: FormData) => {
+  try {
+    const { email } = await verifyEmailSchema.parseAsync(formData)
+
+    const findUserByEmail = await prisma.user.findUnique({
+      where: { email },
+    })
+
+    if (!findUserByEmail) throw new Error('User not found.')
+
+    if (findUserByEmail.verifiedEmail)
+      throw new Error('Email already verified.')
+
+    const createToken = await prisma.token.create({
+      data: {
+        userId: findUserByEmail.id,
+        type: 'VERIFIED_EMAIL',
+      },
+    })
+
+    sendMail({
+      sendTo: email,
+      subject: 'Email Verification',
+      html: await verificationMailTemplate(
+        findUserByEmail.name,
+        createToken.id,
+      ),
+    })
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return sendError(err.errors[0].message)
+    }
+    if (err instanceof Error) {
+      return sendError(err.message)
+    }
+    return sendError('Bad request.')
+  }
+}
+
 const changePassword = async (
   userId: string,
   formData: FormData,
   tokenRecover?: string,
 ) => {
   try {
-    const { currentPassword, password } =
-      await changePasswordSchema.parseAsync(formData)
+    const { password } = await changePasswordSchema.parseAsync(formData)
 
     const findUserById = await prisma.user.findUnique({
       where: {
@@ -174,20 +213,6 @@ const changePassword = async (
     })
 
     if (!findUserById) throw new Error('User not found.')
-
-    const comparedPassword = await verifyPassword(
-      currentPassword,
-      findUserById.password,
-    )
-
-    if (!comparedPassword) throw new Error('Password is incorrect.')
-
-    const comparedNewPassword = await verifyPassword(
-      password,
-      findUserById.password,
-    )
-
-    if (comparedNewPassword) throw new Error('Passwords are the same.')
 
     const hashedPassword = await encryptPassword(password)
 
@@ -661,6 +686,7 @@ export {
   authorizeRedirect,
   authorizeToken,
   recoverPassword,
+  verifyEmail,
   changePassword,
   registerUser,
   createDomain,

@@ -23,15 +23,18 @@ const redirectSchema = formData({
 const tokenVerificationSchema = string({ message: 'Token ID is required' })
 
 const changePasswordSchema = formData({
-  currentPassword: string({ message: 'New Password is required' }).min(8, {
-    message: 'Password must be more than 8 characters',
-  }),
   password: string({ message: 'Password is required' }).min(8, {
     message: 'Password must be more than 8 characters',
   }),
 })
 
 const recoverPasswordSchema = formData({
+  email: string({ message: 'Email is required' })
+    .min(1, { message: 'Email is required' })
+    .email({ message: 'Invalid email' }),
+})
+
+const verifyEmailSchema = formData({
   email: string({ message: 'Email is required' })
     .min(1, { message: 'Email is required' })
     .email({ message: 'Invalid email' }),
@@ -121,6 +124,7 @@ export {
   tokenVerificationSchema,
   changePasswordSchema,
   recoverPasswordSchema,
+  verifyEmailSchema,
   signUpSchema,
   createDomainSchema,
   editDomainSchema,

@@ -6,9 +6,28 @@ import { Input } from '@/components/input'
 import { useRouter } from 'next/navigation'
 import { Lock, Mail } from 'lucide-react'
 import { toast } from '@/utils/toast'
+import { verifyEmail } from '@/utils/db'
 
 const SignInForm = () => {
   const router = useRouter()
+
+  const verifyEmailAction = async (formData: FormData) => {
+    const responseAction = await verifyEmail(formData)
+
+    if (responseAction?.error) {
+      return toast({
+        type: 'error',
+        message: responseAction.error,
+        style: 'subdark',
+      })
+    }
+
+    toast({
+      type: 'success',
+      message: 'Email sent successfully',
+      style: 'subdark',
+    })
+  }
 
   const authenticateUserAction = async (formData: FormData) => {
     const response = await signIn('credentials', {
@@ -21,7 +40,14 @@ const SignInForm = () => {
       return toast({
         type: 'error',
         message: response.code,
-        style: 'dark',
+        style: 'subdark',
+        closeButton:
+          response.error === 'Verification'
+            ? {
+                onClick: async () => verifyEmailAction(formData),
+                title: 'Send',
+              }
+            : undefined,
       })
     }
 

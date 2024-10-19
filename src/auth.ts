@@ -13,6 +13,14 @@ export class InvalidLoginError extends CredentialsSignin {
   }
 }
 
+export class UnverifiedEmailError extends CredentialsSignin {
+  constructor(message: string) {
+    super(message)
+    this.type = 'Verification'
+    this.code = message
+  }
+}
+
 declare module 'next-auth' {
   interface Session {
     user: {
@@ -42,6 +50,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
           if (err instanceof InvalidLoginError) {
             throw new InvalidLoginError(err.code)
+          }
+          if (err instanceof UnverifiedEmailError) {
+            throw new UnverifiedEmailError(err.code)
           }
           throw new InvalidLoginError('Bad request.')
         }
