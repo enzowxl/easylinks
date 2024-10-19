@@ -31,6 +31,12 @@ const getLinkBySlugAndHost = async (slug: string, host: string) => {
 
   if (!findLinkByConditions) return notFound()
 
+  if (findLinkByConditions.domain?.domainName) {
+    const premium = isPremium(findLinkByConditions.userId)
+
+    if (!premium) return notFound()
+  }
+
   return findLinkByConditions
 }
 
@@ -46,13 +52,7 @@ const RedirectPage = async ({
   const country = await getCountry()
   const ip = getIp()
 
-  const premium = isPremium()
-
   const link = await getLinkBySlugAndHost(slug, host)
-
-  if (link.domain) {
-    if (!premium) return notFound()
-  }
 
   const clickData: Prisma.ClickUncheckedCreateInput = {
     linkId: link.id,

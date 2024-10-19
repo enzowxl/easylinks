@@ -2,7 +2,7 @@
 
 import { auth } from '@/auth'
 import { notFound } from 'next/navigation'
-import { getMe } from './db'
+import { getMe, getUser } from './db'
 import { User } from '@prisma/client'
 
 interface isAuthenticatedType {
@@ -26,16 +26,22 @@ const isAuthenticated = async ({
   return { user: session.user }
 }
 
-const isAdmin = async () => {
-  const user = await getMe()
+const isAdmin = async (userId?: string) => {
+  let user: User
+
+  if (userId) {
+    user = await getUser(userId)
+  } else {
+    user = await getMe()
+  }
 
   if (user.role !== 'ADMIN') return false
 
   return { user }
 }
 
-const isPremium = async (): Promise<isPremiumType> => {
-  const admin = await isAdmin()
+const isPremium = async (userId?: string): Promise<isPremiumType> => {
+  const admin = await isAdmin(userId)
 
   if (!admin) {
     const user = await getMe()
