@@ -6,7 +6,7 @@ import { notFound, redirect } from 'next/navigation'
 import { UAParser } from 'ua-parser-js'
 import { getCountry, getIp } from '@/utils/network'
 import { createClick } from '@/utils/db'
-// import { isPremium } from '@/utils/verify'
+import { isPremium } from '@/utils/verify'
 
 export type RedirectLinkType = Prisma.LinkGetPayload<{
   include: { domain: true; util: true }
@@ -31,12 +31,6 @@ const getLinkBySlugAndHost = async (slug: string, host: string) => {
 
   if (!findLinkByConditions) return notFound()
 
-  // if (findLinkByConditions.domain?.domainName) {
-  //   const premium = isPremium()
-
-  //   if (!premium) return notFound()
-  // }
-
   return findLinkByConditions
 }
 
@@ -52,7 +46,13 @@ const RedirectPage = async ({
   const country = await getCountry()
   const ip = getIp()
 
+  const premium = isPremium()
+
   const link = await getLinkBySlugAndHost(slug, host)
+
+  if (link.domain) {
+    if (!premium) return notFound()
+  }
 
   const clickData: Prisma.ClickUncheckedCreateInput = {
     linkId: link.id,
