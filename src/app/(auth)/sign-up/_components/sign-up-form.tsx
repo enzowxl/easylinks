@@ -1,35 +1,37 @@
-'use client'
+"use client";
 
-import { Button } from '@/components/button'
-import { Input } from '@/components/input'
-import { registerUser } from '@/utils/db'
-import { toast } from '@/utils/toast'
-import { IdCard, Lock, Mail } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { Button } from "@/components/button";
+import { Input } from "@/components/input";
+import { registerUser } from "@/utils/db";
+import { toast } from "@/utils/toast";
+import { IdCard, Lock, Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const SignUpForm = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   const registerUserAction = async (formData: FormData) => {
-    const responseAction = await registerUser(formData)
+    const responseAction = await registerUser(formData);
 
     if (responseAction?.error) {
-      return toast({
-        type: 'error',
+      toast({
+        type: "error",
         message: responseAction.error,
-        style: 'dark',
-      })
+        style: "dark",
+      });
+
+      return;
     }
 
     toast({
-      type: 'success',
+      type: "success",
       message:
-        'Successfully registered, a verification link has been sent to your email',
-      style: 'dark',
-    })
+        "Successfully registered, a verification link has been sent to your email",
+      style: "dark",
+    });
 
-    return router.push('/sign-in')
-  }
+    return router.push("/sign-in");
+  };
 
   return (
     <form
@@ -67,7 +69,7 @@ const SignUpForm = () => {
       />
       <Button type="submit" title="Continue" variant="big" />
     </form>
-  )
-}
+  );
+};
 
-export { SignUpForm }
+export { SignUpForm };

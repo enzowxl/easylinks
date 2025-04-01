@@ -1,62 +1,66 @@
-'use client'
+"use client";
 
-import { signIn } from 'next-auth/react'
-import { Button } from '@/components/button'
-import { Input } from '@/components/input'
-import { useRouter } from 'next/navigation'
-import { Lock, Mail } from 'lucide-react'
-import { toast } from '@/utils/toast'
-import { verifyEmail } from '@/utils/db'
+import { signIn } from "next-auth/react";
+import { Button } from "@/components/button";
+import { Input } from "@/components/input";
+import { useRouter } from "next/navigation";
+import { Lock, Mail } from "lucide-react";
+import { toast } from "@/utils/toast";
+import { verifyEmail } from "@/utils/db";
 
 const SignInForm = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   const verifyEmailAction = async (formData: FormData) => {
-    const responseAction = await verifyEmail(formData)
+    const responseAction = await verifyEmail(formData);
 
     if (responseAction?.error) {
-      return toast({
-        type: 'error',
+      toast({
+        type: "error",
         message: responseAction.error,
-        style: 'subdark',
-      })
+        style: "subdark",
+      });
+
+      return;
     }
 
     toast({
-      type: 'success',
-      message: 'Email sent successfully',
-      style: 'subdark',
-    })
-  }
+      type: "success",
+      message: "Email sent successfully",
+      style: "subdark",
+    });
+  };
 
   const authenticateUserAction = async (formData: FormData) => {
-    const response = await signIn('credentials', {
-      email: formData.get('email'),
-      password: formData.get('password'),
+    const response = await signIn("credentials", {
+      email: formData.get("email"),
+      password: formData.get("password"),
       redirect: false,
-    })
+    });
 
     if (response?.code) {
-      return toast({
-        type: 'error',
+      toast({
+        type: "error",
         message: response.code,
-        style: 'subdark',
+        style: "subdark",
         closeButton:
-          response.error === 'Verification'
+          response.error === "Verification"
             ? {
                 onClick: async () => verifyEmailAction(formData),
-                title: 'Send',
+                title: "Send",
               }
             : undefined,
-      })
+      });
+
+      return;
     }
 
     toast({
-      type: 'remove',
-    })
+      type: "remove",
+    });
 
-    return router.push('/dashboard')
-  }
+    return router.push("/dashboard");
+  };
 
   return (
     <form
@@ -83,7 +87,7 @@ const SignInForm = () => {
       />
       <Button title="Continue" variant="big" />
     </form>
-  )
-}
+  );
+};
 
-export { SignInForm }
+export { SignInForm };
