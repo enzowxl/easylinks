@@ -1,35 +1,37 @@
-'use client'
+"use client";
 
-import { Button } from '@/components/button'
-import { Input } from '@/components/input'
-import { useRouter } from 'next/navigation'
-import { Mail } from 'lucide-react'
-import { toast } from '@/utils/toast'
-import { recoverPassword } from '@/utils/db'
+import { Button } from "@/components/button";
+import { Input } from "@/components/input";
+import { useRouter } from "next/navigation";
+import { Mail } from "lucide-react";
+import { toast } from "@/utils/toast";
+import { recoverPassword } from "@/utils/db";
 
 const RecoverPasswordForm = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   const recoverPasswordAction = async (formData: FormData) => {
-    const responseAction = await recoverPassword(formData)
+    const responseAction = await recoverPassword(formData);
 
     if (responseAction?.error) {
-      return toast({
-        type: 'error',
+      toast({
+        type: "error",
         message: responseAction.error,
-        style: 'dark',
-      })
+        style: "dark",
+      });
+
+      return;
     }
 
     toast({
-      type: 'success',
+      type: "success",
       message:
-        'If the email is registered, you will receive a verification link.',
-      style: 'dark',
-    })
+        "If the email is registered, you will receive a verification link.",
+      style: "dark",
+    });
 
-    return router.push('/sign-in')
-  }
+    return router.push("/sign-in");
+  };
 
   return (
     <form
@@ -47,7 +49,7 @@ const RecoverPasswordForm = () => {
       />
       <Button title="Continue" variant="big" />
     </form>
-  )
-}
+  );
+};
 
-export { RecoverPasswordForm }
+export { RecoverPasswordForm };
