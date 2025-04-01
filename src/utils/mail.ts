@@ -8,7 +8,7 @@ interface SendMailType {
 
 const sendMail = async ({ sendTo, subject, html }: SendMailType) => {
   const mailOptions: SendMailOptions = {
-    from: 'enzoalmeida34@gmail.com',
+    from: 'contact.enzoalmeida@gmail.com',
     to: sendTo,
     subject,
     html,
@@ -18,8 +18,8 @@ const sendMail = async ({ sendTo, subject, html }: SendMailType) => {
   const transporter: Transporter = createTransport({
     service: 'gmail',
     auth: {
-      user: 'enzoalmeida34@gmail.com',
-      pass: 'zrljvwcmydimuxmg',
+      user: 'contact.enzoalmeida@gmail.com',
+      pass: 'quhvhzcfdovmgied',
     },
   })
 
