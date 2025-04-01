@@ -21,11 +21,13 @@ const RecoverPasswordForm = ({ token }: { token: Token }) => {
     )
 
     if (responseAction?.error) {
-      return toast({
+      toast({
         type: 'error',
         message: responseAction.error,
         style: 'dark',
       })
+
+      return
     }
 
     toast({

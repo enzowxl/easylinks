@@ -24,11 +24,13 @@ const CreateLinkList = ({ domains }: { domains: DomainsType[] }) => {
     const responseAction = await createLink(formData)
 
     if (responseAction?.error) {
-      return toast({
+      toast({
         type: 'error',
         message: responseAction.error,
         style: 'dark',
       })
+
+      return
     }
 
     toast({

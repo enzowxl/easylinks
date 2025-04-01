@@ -13,11 +13,13 @@ const ModalCreateDomain = () => {
     const responseAction = await createDomain(formData)
 
     if (responseAction?.error) {
-      return toast({
+      toast({
         type: 'error',
         message: responseAction.error,
         style: 'dark',
       })
+
+      return
     }
 
     toast({

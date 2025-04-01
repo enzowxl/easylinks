@@ -12,11 +12,13 @@ const ModalDeleteLink = ({ link }: { link: Link }) => {
     const responseAction = await deleteLink(link.id)
 
     if (responseAction?.error) {
-      return toast({
+      toast({
         type: 'error',
         message: responseAction.error,
         style: 'dark',
       })
+
+      return
     }
 
     toast({

@@ -22,11 +22,13 @@ const RedirectForm = ({
     const responseAction = await authorizeRedirect(link.id, formData)
 
     if (responseAction?.error) {
-      return toast({
+      toast({
         type: 'error',
         message: responseAction.error,
         style: 'dark',
       })
+
+      return
     }
 
     await createClick(clickData)

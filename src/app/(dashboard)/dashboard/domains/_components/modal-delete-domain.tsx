@@ -12,11 +12,13 @@ const ModalDeleteDomain = ({ domain }: { domain: Domain }) => {
     const responseAction = await deleteDomain(domain.domainName)
 
     if (responseAction?.error) {
-      return toast({
+      toast({
         type: 'error',
         message: responseAction.error,
         style: 'dark',
       })
+
+      return
     }
 
     toast({
